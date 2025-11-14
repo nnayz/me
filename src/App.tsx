@@ -23,13 +23,13 @@ function App() {
         <div
           className={cn(
             'h-full min-h-screen relative w-full',
-            'my-4 bg-white dark:bg-gray-900 sm:my-24',
+            'my-4 bg-white dark:bg-black sm:my-24',
             'motion-reduce:transform-none motion-reduce:transition-none',
             'font-sans antialiased',
             'font-[family-name:Inter]',
           )}
         >
-          <nav className="fixed bottom-4 left-2 z-50 sm:left-4 md:left-6">
+          <nav className="fixed bottom-12 left-8 z-50 sm:bottom-4 sm:left-4 md:left-6" style={{ paddingBottom: 'max(env(safe-area-inset-bottom), 0px)' }}>
             <RollingMenu />
           </nav>
           <AnimateEnter>

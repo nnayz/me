@@ -5,21 +5,32 @@ import ExternalLink from '@components/ExternalLink';
 import { Link } from 'react-router-dom';
 import logoImage from '/static/images/logo.png';
 
-function getData() {
-  const posts = allWritings
-    .map((post) => ({
-      slug: post.slug,
-      title: post.title,
-      summary: post.summary,
-      publishedAt: post.publishedAt,
-    }))
-    .sort(
-      (a, b) =>
-        Number(new Date(b.publishedAt)) - Number(new Date(a.publishedAt)),
-    )
-    .slice(0, 3);
+type Post = {
+  slug: string;
+  title: string;
+  summary: string;
+  publishedAt: string;
+};
 
-  return { posts };
+function getData(): { posts: Post[] } {
+  try {
+    const posts = ((allWritings as any[]) || [])
+      .map((post: any): Post => ({
+        slug: post.slug,
+        title: post.title,
+        summary: post.summary,
+        publishedAt: post.publishedAt,
+      }))
+      .sort(
+        (a: Post, b: Post) =>
+          Number(new Date(b.publishedAt)) - Number(new Date(a.publishedAt)),
+      )
+      .slice(0, 3);
+
+    return { posts };
+  } catch {
+    return { posts: [] };
+  }
 }
 
 export default function Home() {
@@ -60,27 +71,27 @@ function AboutMe() {
       <p className="text-tertiary">About me</p>
       <div className="text-secondary flex flex-col gap-4">
         <p>
-          I&apos;m obsessed with creating digital interfaces that just{' '}
-          <i>work</i> - where design and code come together seamlessly.
-          You&apos;ll often find me tinkering with prototypes or exploring apps
-          that have that special charm.
+          I enjoy building software that feels natural and dependable, where
+          thoughtful engineering meets clean, purposeful design. I like
+          exploring new tools, experimenting with prototypes, and understanding
+          how AI and data can shape more intuitive digital experiences.
         </p>
         <p>
-          Playing with prototypes, exploring charmful apps, now at{' '}
-          <ExternalLink arrow={false} href="https://deta.space">
-            Deta
-          </ExternalLink>{' '}
-          reimagining what an operating system can be for the web. Formerly at{' '}
-          <ExternalLink arrow={false} href="https://github.com/Landmarks-Tech">
-            Landmarks
-          </ExternalLink>{' '}
-          , crafting web applications that aimed to be both beautiful and
-          functional.
+          I am currently an AI Engineer at{' '}
+          <ExternalLink arrow={false} href="https://syntwin.ai">
+            SynTwin GmbH
+          </ExternalLink>
+          , working on the platform that brings Digital Twins to life and
+          developing agentic workflows that push the boundaries of interaction.
+          My path has taken me through research groups, startups, and full stack
+          projects across data, AI, and web engineering.
         </p>
         <p>
-          Currently studying Computer Science at BBU. I&apos;m a firm believer
-          in always learning, whether it&apos;s through reading, writing, or
-          diving into new projects.
+          I study Data Science and AI at the{' '}
+          <ExternalLink arrow={false} href="https://www.uni-hamburg.de">
+            University of Hamburg
+          </ExternalLink> and keep learning by reading,
+          making, and exploring new ideas.
         </p>
         <p>
           Check out my{' '}
@@ -101,40 +112,46 @@ function ContactLink({
   email,
 }: {
   email?: string;
-  href?: string;
-  title: string;
-  website?: string;
+  href?: string | string[];
+  title: string | string[];
+  website?: string | string[];
 }) {
+  const hrefs = Array.isArray(href) ? href : href ? [href] : [];
+  const titles = Array.isArray(title) ? title : title ? [title] : [];
+
   return (
     <span className="block items-center gap-4">
       {website && <p className="text-quaternary">{website}</p>}
-      {href && (
-        <a
-          className="text-secondary hover:text-primary transition-opacity duration-150"
-          href={href}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          {title}{' '}
-          <svg
-            className=" inline-block h-3 w-3"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.5}
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+      <div className="flex flex-col gap-2">
+        {hrefs.map((link, index) => (
+          <a
+            key={index}
+            className="text-secondary hover:text-primary transition-opacity duration-150"
+            href={link}
+            rel="noopener noreferrer"
+            target="_blank"
           >
-            <path
-              d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </a>
-      )}
+            {titles[index] ?? link}{' '}
+            <svg
+              className="ml-0.5 inline-block h-3 w-3"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.5}
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </a>
+        ))}
+      </div>
       {email && (
         <p className="text-secondary hover:text-primary transition-opacity duration-150">
-          {title}
+          {typeof title === 'string' ? title : title[0] ?? ''}
         </p>
       )}
     </span>
@@ -147,63 +164,71 @@ function Contact() {
       <p className="text-tertiary">Links</p>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <ContactLink
-          href="https://X.com/nasrulhuda"
-          title="nasrulhuda"
-          website="X"
+          href="https://www.linkedin.com/in/nasrul-hudaa/"
+          title="Nasrul Huda"
+          website="LinkedIn"
         />
         <ContactLink
           href="https://github.com/nnayz"
-          title="nnayz"
+          title="@nnayz"
           website="GitHub"
         />
         <ContactLink
-          href="https://www.figma.com/@nasrulhuda"
-          title="nasrulhuda"
-          website="Figma"
+          href={["https://www.instagram.com/nnasrrul/", "https://www.instagram.com/nasrultakesphotos/"]}
+          title={["@nnasrrul", "@nasrultakesphotos"]}
+          website="Instagram"
         />
         <ContactLink
-          href="https://layers.to/nasrulhuda"
-          title="nasrulhuda"
-          website="Layers.to"
+          href="https://x.com/nnasrrull"
+          title="@nnasrrull"
+          website="X"
         />
         <ContactLink
-          email="hi[at]nasrulhuda(dot)dev"
-          title="hi[at]nasrulhuda(dot)dev"
+          email="hi@nasrul.info"
+          title="hi@nasrul.info"
           website="Email"
         />
-        <ContactLink href="https://read.cv/nasrulhuda" title="nasrulhuda" website="CV" />
+        <ContactLink href="https://read.cv/nasrulhuda" title="drive" website="CV" />
       </div>
     </div>
   );
 }
 
 function RecentWritings() {
-  const { posts } = getData();
+  try {
+    const { posts } = getData();
 
-  return (
-    <div className="flex flex-col gap-4">
-      <p className="text-tertiary">Recent writing</p>
-      <div className="space-y-2">
-        {posts.map((post) => (
-          <Link
-            className={cn(
-              '-mx-2 flex flex-row justify-between rounded-md px-2 py-2',
-              'hover:bg-gray-200 dark:hover:bg-gray-800',
-              'transition-all duration-200',
-            )}
-            to={`/writing/${post.slug}`}
-            key={post.slug}
-          >
-            <span className="text-secondary mr-2 flex-grow truncate">
-              {post.title}
-            </span>
-            <span className="text-tertiary flex-shrink-0">
-              <DateViewer date={post.publishedAt} />{' '}
-            </span>
-          </Link>
-        ))}
+    if (posts.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className="flex flex-col gap-4">
+        <p className="text-tertiary">Recent writing</p>
+        <div className="space-y-2">
+          {posts.map((post: Post) => (
+            <Link
+              className={cn(
+                '-mx-2 flex flex-row justify-between rounded-md px-2 py-2',
+                'hover:bg-gray-200 dark:hover:bg-gray-800',
+                'transition-all duration-200',
+              )}
+              to={`/writing/${post.slug}`}
+              key={post.slug}
+            >
+              <span className="text-secondary mr-2 flex-grow truncate">
+                {post.title}
+              </span>
+              <span className="text-tertiary flex-shrink-0">
+                <DateViewer date={post.publishedAt} />{' '}
+              </span>
+            </Link>
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  } catch {
+    return null;
+  }
 }
 

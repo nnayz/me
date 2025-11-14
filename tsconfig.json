@@ -28,6 +28,6 @@
       "content-collections": ["./.content-collections/generated"]
     }
   },
-  "include": ["src", "vite.config.ts", "metadata.ts"],
+  "include": ["src", "vite.config.ts", "metadata.ts", "content-collections.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

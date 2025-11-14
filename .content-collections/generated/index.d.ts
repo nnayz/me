@@ -1,7 +1,2 @@
-import configuration from "../../metadata.ts";
-import { GetTypeByName } from "@content-collections/core";
+export declare const allWritings: any[];
 
-export type Writing = GetTypeByName<typeof configuration, "Writing">;
-export declare const allWritings: Array<Writing>;
-
-export {};
