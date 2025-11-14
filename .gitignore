@@ -3,6 +3,8 @@
 
 .contentlayer
 /.contentlayer
+.content-collections
+/.content-collections
 # dependencies
 /node_modules
 /.pnp

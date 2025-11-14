@@ -9,11 +9,11 @@ export default function Footer() {
       <FooterGraphic />
       <p className="flex flex-col gap-4">
         © 2021 - {new Date().getFullYear()} Nasrul Huda. All Rights Reserved.
-        <span>www.nasrulhuda.dev v.2024.06</span>
+        <span>www.nasrul.info v.2024.06</span>
         <span>
           Website built using Vite & React & TailwindCSS (
           <a
-            href="https://github.com/nnayz/cretu.dev"
+            href="https://github.com/nnayz/me"
             rel="noopener noreferrer"
             target="_blank"
           >

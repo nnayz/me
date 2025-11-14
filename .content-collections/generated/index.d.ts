@@ -1,4 +1,4 @@
-import configuration from "../../content-collections.ts";
+import configuration from "../../metadata.ts";
 import { GetTypeByName } from "@content-collections/core";
 
 export type Writing = GetTypeByName<typeof configuration, "Writing">;

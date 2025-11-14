@@ -74,7 +74,7 @@ export const works: WorkCardType[] = [
     title: "Roogle",
     description: "2023",
     authors: ["Nasrul Huda"],
-    href: "https://roogle.cretu.dev/",
+    href: "https://roogle.nasrul.info/",
     img: "/static/images/work/roogle.webp",
     h: "h-96"
   },
@@ -125,7 +125,7 @@ export const works: WorkCardType[] = [
     title: "Writer",
     description: "2023",
     authors: ["Nasrul Huda"],
-    href: "https://writer.cretu.dev/",
+    href: "https://writer.nasrul.info/",
     img: "/static/images/work/writer.webp",
     h: "h-32"
   },
@@ -133,7 +133,7 @@ export const works: WorkCardType[] = [
     title: "Radial Lock",
     description: "2023",
     authors: ["Nasrul Huda"],
-    href: "https://knob.cretu.dev/",
+    href: "https://knob.nasrul.info/",
     img: "/static/images/work/knob.webp",
     h: "h-64"
   },
@@ -163,7 +163,7 @@ export const works: WorkCardType[] = [
     title: "Meshgrad",
     description: "2022",
     authors: ["Nasrul Huda"],
-    href: "https://meshgrad.cretu.dev/",
+    href: "https://meshgrad.nasrul.info/",
     img: "/static/images/work/meshgrad.webp",
     h: "h-32"
   },
@@ -171,7 +171,7 @@ export const works: WorkCardType[] = [
     title: "Light Bulb",
     description: "2022",
     authors: ["Nasrul Huda"],
-    href: "https://light.cretu.dev/",
+    href: "https://light.nasrul.info/",
     img: "/static/images/work/light.gif",
     h: "h-72"
   },
@@ -203,7 +203,7 @@ export const works: WorkCardType[] = [
     title: "Romanian Wordle",
     description: "2022",
     authors: ["Nasrul Huda"],
-    href: "https://wordle.cretu.dev/",
+    href: "https://wordle.nasrul.info/",
     img: "/static/images/work/wordle.webp",
     h: "h-36"
   },
@@ -219,7 +219,7 @@ export const works: WorkCardType[] = [
     title: "Covid Tracker",
     description: "2021",
     authors: ["Nasrul Huda"],
-    href: "https://covid.cretu.dev/",
+    href: "https://covid.nasrul.info/",
     img: "/static/images/work/covid.webp",
     h: "h-72"
   },
@@ -227,7 +227,7 @@ export const works: WorkCardType[] = [
     title: "Front-End Template",
     description: "2021",
     authors: ["Nasrul Huda"],
-    href: "https://template.cretu.dev/",
+    href: "https://template.nasrul.info/",
     img: "/static/images/work/template.webp",
     h: "h-64"
   },

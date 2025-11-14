@@ -1,6 +1,5 @@
 import ExternalLink from './ExternalLink';
 import Flashcard from './Flashcard';
-import { useMDXComponent } from '@content-collections/mdx/react';
 import { Link } from 'react-router-dom';
 
 const CustomLink = (props: any) => {
@@ -31,16 +30,5 @@ const components = {
   Image: RoundedImage,
   a: CustomLink,
 };
-
-
-export function Mdx({ code }: { code: string }) {
-  const Component = useMDXComponent(code);
-
-  return (
-    <article className="prose-quoteless prose prose-neutral dark:prose-invert">
-      <Component components={components} />
-    </article>
-  );
-}
 
 export default components;

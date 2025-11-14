@@ -2,17 +2,39 @@ import '@assets/styles/prose.css';
 import { allWritings } from 'content-collections';
 import DateViewer from '@components/DateView';
 import ExternalLink from '@components/ExternalLink';
-import { Mdx } from '@components/MDXComponents';
+import components from '@components/MDXComponents';
 import { useParams, Navigate } from 'react-router-dom';
+import { lazy, Suspense, useMemo } from 'react';
 
 const editUrl = (slug: string) =>
-  `https://github.com/nnayz/cretu.dev/edit/main/data/writing/${slug}.mdx`;
+  `https://github.com/nnayz/me/edit/main/data/writing/${slug}.mdx`;
+
+// Import all MDX files using Vite's glob import
+const mdxModules = import.meta.glob<{ default: React.ComponentType<any> }>(
+  '../../data/writing/*.mdx'
+);
 
 export default function WritingPost() {
   const { slug } = useParams<{ slug: string }>();
   const post = allWritings.find((post) => post.slug === slug);
 
   if (!post) {
+    return <Navigate to="/404" replace />;
+  }
+
+  // Get the MDX component loader for this slug
+  const mdxPath = `../../data/writing/${slug}.mdx`;
+  const mdxLoader = mdxModules[mdxPath];
+  
+  // Create a lazy component from the loader, memoized by slug
+  const MDXContent = useMemo(() => {
+    if (!mdxLoader) {
+      return null;
+    }
+    return lazy(() => mdxLoader().then((mod) => ({ default: mod.default })));
+  }, [slug, mdxLoader]);
+
+  if (!mdxLoader || !MDXContent) {
     return <Navigate to="/404" replace />;
   }
 
@@ -38,7 +60,11 @@ export default function WritingPost() {
           />
         </div>
       )}
-      <Mdx code={post.body.code} />
+      <article className="prose-quoteless prose prose-neutral dark:prose-invert">
+        <Suspense fallback={<div>Loading...</div>}>
+          <MDXContent components={components} />
+        </Suspense>
+      </article>
       <div className="mt-8">
         <ExternalLink className="text-sm" href={editUrl(post.slug)}>
           Edit source on GitHub

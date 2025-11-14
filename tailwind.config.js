@@ -1,7 +1,8 @@
-const colors = require('tailwindcss/colors');
+import colors from 'tailwindcss/colors';
+import typography from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
@@ -11,7 +12,7 @@ module.exports = {
   future: {
     hoverOnlyWhenSupported: true,
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [typography],
   theme: {
     extend: {
       colors: {
