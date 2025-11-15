@@ -28,6 +28,5 @@
       "content-collections": ["./.content-collections/generated"]
     }
   },
-  "include": ["src", "content-collections.d.ts"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src", "content-collections.d.ts"]
 }
