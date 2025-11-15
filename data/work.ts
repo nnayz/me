@@ -18,6 +18,14 @@ export const works: WorkCardType[] = [
     h: "h-96",
   },
   {
+    title: "Pettoo",
+    description: "2025",
+    img: "/static/images/work/pettoo.webp",
+    href: "https://pettoo.de",
+    company: "Pettoo UG",
+    h: "h-72",
+  },
+  {
     title: "DATS",
     description: "2025",
     img: "/static/images/work/dats.webp",
