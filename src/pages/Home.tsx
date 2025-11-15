@@ -188,7 +188,7 @@ function Contact() {
           title="hi@nasrul.info"
           website="Email"
         />
-        <ContactLink href="https://read.cv/nasrulhuda" title="drive" website="CV" />
+        <ContactLink href="https://www.icloud.com/iclouddrive/019RBdIabpIVIYYd0D1u4Z_ug#resume" title="drive" website="CV" />
       </div>
     </div>
   );

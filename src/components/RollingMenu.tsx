@@ -1,5 +1,3 @@
-
-import { GitHubLogo, TwitterLogo } from './Icons';
 import { actions } from '@data/cmd';
 import { cn } from '@/lib/className';
 import {

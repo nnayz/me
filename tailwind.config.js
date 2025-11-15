@@ -13,6 +13,11 @@ export default {
     hoverOnlyWhenSupported: true,
   },
   plugins: [typography],
+  safelist: [
+    'h-48',
+    'h-72',
+    'h-96',
+  ],
   theme: {
     extend: {
       colors: {
