@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'next-themes';
+import { Analytics } from '@vercel/analytics/react';
 import { cn } from '@/lib/className';
 import AnimateEnter from '@components/AnimateEnter';
 import RollingMenu from '@components/RollingMenu';
@@ -45,6 +46,7 @@ function App() {
           </AnimateEnter>
         </div>
       </BrowserRouter>
+      <Analytics />
     </ThemeProvider>
   );
 }
