@@ -2,9 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+}
+
 @layer base {
   html {
-    @apply max-h-screen antialiased;
+    @apply max-h-screen antialiased text-[13px] sm:text-sm;
+    font-family: var(--font-body);
   }
 
   * {
@@ -12,7 +18,32 @@
   }
 
   body {
-    @apply m-0 p-0 font-sans;
+    @apply m-0 p-0;
+    font-family: var(--font-body);
+    @apply bg-stone-50 dark:bg-neutral-950;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    @apply text-base sm:text-lg font-bold tracking-tight text-primary;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    @apply text-sm sm:text-base font-semibold tracking-tight text-primary;
+  }
+
+  h3 {
+    font-family: var(--font-display);
+    @apply text-[13px] sm:text-sm font-semibold tracking-tight text-primary;
+  }
+
+  p {
+    @apply leading-relaxed text-[13px] sm:text-sm;
+  }
+
+  a {
+    @apply transition-colors duration-150;
   }
 
   pre::-webkit-scrollbar {
@@ -20,8 +51,12 @@
   }
 
   pre {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  ::selection {
+    @apply bg-black/10 dark:bg-white/20;
   }
 
   .capsize::before {
@@ -38,6 +73,18 @@
 }
 
 @layer components {
+  .link-hover {
+    @apply relative;
+  }
+
+  .link-hover::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-[1px] bg-current transition-all duration-200;
+  }
+
+  .link-hover:hover::after {
+    @apply w-full;
+  }
 }
 
 @layer utilities {
@@ -59,10 +106,9 @@
 
   .flip-card {
     background-color: transparent;
-    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+    perspective: 1000px;
   }
 
-  /* This container is needed to position the front and back side */
   .flip-card-inner {
     position: relative;
     transition: transform 0.8s;
@@ -73,16 +119,12 @@
     transform: rotateY(180deg);
   }
 
-  /* .flip-card:hover .flip-card-inner {
-    transform: rotateY(180deg);
-  } */
-
   .flip-card-front,
   .flip-card-back {
     position: absolute;
     width: 100%;
     height: 100%;
-    -webkit-backface-visibility: hidden; /* Safari */
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
   }
 

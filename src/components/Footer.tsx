@@ -1,22 +1,26 @@
 export default function Footer() {
   return (
-    <footer className="text-quaternary mx-auto max-w-2xl border-gray-200 px-8 py-12 pb-24 pt-4 text-sm dark:border-gray-200 dark:text-gray-600">
-
-      <p className="flex flex-col gap-4 mt-6">
-        © 2021 - {new Date().getFullYear()} Nasrul Huda. All Rights Reserved.
-        <span>www.nasrul.info v.2024.06</span>
-        <span>
-          Website built using Vite [
+    <footer className="fixed bottom-4 left-4 right-4 z-40 sm:bottom-6 sm:left-6 sm:right-6 md:left-8 md:right-8 lg:left-12 lg:right-12">
+      <div className="flex items-center justify-between px-3 py-2 text-[10px] text-quaternary">
+        <div className="flex items-center gap-2">
+          <span className="border border-black/30 dark:border-white/30 px-2 py-0.5 shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,0.3)] dark:shadow-[1.5px_1.5px_0px_0px_rgba(255,255,255,0.2)] bg-transparent">
+            © {new Date().getFullYear()}
+          </span>
+          <span className="hidden sm:inline">Nasrul Huda</span>
+        </div>
+        
+        <div className="flex items-center gap-3">
+          <span className="hidden md:inline text-quaternary">v.2025.12</span>
           <a
+            className="border border-black/30 dark:border-white/30 px-2 py-0.5 shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,0.3)] dark:shadow-[1.5px_1.5px_0px_0px_rgba(255,255,255,0.2)] bg-transparent hover:border-black/50 dark:hover:border-white/50 hover:text-tertiary transition-all duration-150"
             href="https://github.com/nnayz/me"
             rel="noopener noreferrer"
             target="_blank"
           >
-            view source
+            source ↗
           </a>
-          ].
-        </span>
-      </p>
+        </div>
+      </div>
     </footer>
   );
 }
