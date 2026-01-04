@@ -15,17 +15,29 @@ import { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/className';
 
-// Bento grid span patterns - creates asymmetric, curated layout
-// Each pattern defines [colSpan, rowSpan] for different grid positions
-// Responsive: base (mobile) / md+ (desktop)
+// Moodboard-style patterns - varied sizes for organic, curated feel
+// Creates visual rhythm with mix of small, medium, large, and feature items
+// Optimized for 10-column layout on large screens
 const BENTO_PATTERNS = [
-  { col: 'col-span-2 md:col-span-3 lg:col-span-4', row: 'row-span-2' },  // Extra wide feature
-  { col: 'col-span-2 md:col-span-2', row: 'row-span-1' },  // Wide
+  { col: 'col-span-2 md:col-span-2 lg:col-span-2', row: 'row-span-1' },  // Small-medium
   { col: 'col-span-1', row: 'row-span-1' },  // Small
-  { col: 'col-span-2 md:col-span-3', row: 'row-span-2' },  // Large
-  { col: 'col-span-2 md:col-span-2', row: 'row-span-1' },  // Wide
+  { col: 'col-span-1', row: 'row-span-1' },  // Small
+  { col: 'col-span-2 md:col-span-3 lg:col-span-4', row: 'row-span-2' },  // Large feature
+  { col: 'col-span-1', row: 'row-span-1' },  // Small
+  { col: 'col-span-2 md:col-span-2 lg:col-span-2', row: 'row-span-1' },  // Medium
+  { col: 'col-span-1', row: 'row-span-1' },  // Small
+  { col: 'col-span-1', row: 'row-span-1' },  // Small
+  { col: 'col-span-2 md:col-span-2 lg:col-span-3', row: 'row-span-1' },  // Medium-wide
+  { col: 'col-span-1', row: 'row-span-1' },  // Small
+  { col: 'col-span-2 md:col-span-3 lg:col-span-5', row: 'row-span-2' },  // Extra wide feature
+  { col: 'col-span-1', row: 'row-span-1' },  // Small
+  { col: 'col-span-1', row: 'row-span-1' },  // Small
+  { col: 'col-span-2 md:col-span-2 lg:col-span-2', row: 'row-span-1' },  // Medium
   { col: 'col-span-1', row: 'row-span-2' },  // Tall
-  { col: 'col-span-2 md:col-span-3 lg:col-span-4', row: 'row-span-2' },  // Extra wide feature
+  { col: 'col-span-2 md:col-span-2 lg:col-span-2', row: 'row-span-1' },  // Medium
+  { col: 'col-span-1', row: 'row-span-1' },  // Small
+  { col: 'col-span-1', row: 'row-span-1' },  // Small
+  { col: 'col-span-2 md:col-span-3 lg:col-span-4', row: 'row-span-1' },  // Wide
   { col: 'col-span-1', row: 'row-span-1' },  // Small
 ];
 
@@ -56,17 +68,17 @@ export function BentoGrid({
   rowHeight = { base: 120, sm: 140, md: 160 },
 }: BentoGridProps) {
   const gapClasses = {
-    sm: 'gap-1.5 sm:gap-2',
-    md: 'gap-2 sm:gap-3',
-    lg: 'gap-3 sm:gap-4',
+    sm: 'gap-0.5 sm:gap-1',
+    md: 'gap-1 sm:gap-1.5',
+    lg: 'gap-1.5 sm:gap-2',
   };
 
   // Use explicit Tailwind classes for proper JIT compilation
   const getColumnClasses = () => {
     const base = 'grid-cols-2';
-    const sm = columns.sm === 3 ? 'sm:grid-cols-3' : columns.sm === 4 ? 'sm:grid-cols-4' : columns.sm === 5 ? 'sm:grid-cols-5' : columns.sm === 6 ? 'sm:grid-cols-6' : '';
-    const md = columns.md === 3 ? 'md:grid-cols-3' : columns.md === 4 ? 'md:grid-cols-4' : columns.md === 5 ? 'md:grid-cols-5' : columns.md === 6 ? 'md:grid-cols-6' : '';
-    const lg = columns.lg === 3 ? 'lg:grid-cols-3' : columns.lg === 4 ? 'lg:grid-cols-4' : columns.lg === 5 ? 'lg:grid-cols-5' : columns.lg === 6 ? 'lg:grid-cols-6' : '';
+    const sm = columns.sm === 3 ? 'sm:grid-cols-3' : columns.sm === 4 ? 'sm:grid-cols-4' : columns.sm === 5 ? 'sm:grid-cols-5' : columns.sm === 6 ? 'sm:grid-cols-6' : columns.sm === 7 ? 'sm:grid-cols-7' : columns.sm === 8 ? 'sm:grid-cols-8' : columns.sm === 9 ? 'sm:grid-cols-9' : columns.sm === 10 ? 'sm:grid-cols-10' : '';
+    const md = columns.md === 3 ? 'md:grid-cols-3' : columns.md === 4 ? 'md:grid-cols-4' : columns.md === 5 ? 'md:grid-cols-5' : columns.md === 6 ? 'md:grid-cols-6' : columns.md === 7 ? 'md:grid-cols-7' : columns.md === 8 ? 'md:grid-cols-8' : columns.md === 9 ? 'md:grid-cols-9' : columns.md === 10 ? 'md:grid-cols-10' : '';
+    const lg = columns.lg === 3 ? 'lg:grid-cols-3' : columns.lg === 4 ? 'lg:grid-cols-4' : columns.lg === 5 ? 'lg:grid-cols-5' : columns.lg === 6 ? 'lg:grid-cols-6' : columns.lg === 7 ? 'lg:grid-cols-7' : columns.lg === 8 ? 'lg:grid-cols-8' : columns.lg === 9 ? 'lg:grid-cols-9' : columns.lg === 10 ? 'lg:grid-cols-10' : '';
     return cn(base, sm, md, lg);
   };
 
@@ -74,12 +86,15 @@ export function BentoGrid({
     <div 
       className={cn(
         'grid',
+        'h-[calc(100vh-12rem)] sm:h-[calc(100vh-14rem)]',
+        'overflow-hidden',
+        'auto-rows-fr', // Use fractional units for equal distribution
         getColumnClasses(),
         gapClasses[gap],
         className,
       )}
       style={{
-        gridAutoRows: `minmax(${rowHeight.base}px, auto)`,
+        gridAutoRows: `minmax(${rowHeight.base}px, 1fr)`, // Minimum height but can grow to fill space
       }}
     >
       {children}
@@ -102,18 +117,41 @@ export function BentoGridItem({
   index, 
   className,
   span,
-  delayMultiplier = 0.05,
+  delayMultiplier = 0.03,
 }: BentoGridItemProps) {
   const pattern = BENTO_PATTERNS[index % BENTO_PATTERNS.length];
   const colSpan = span?.col || pattern.col;
   const rowSpan = span?.row || pattern.row;
+  
+  // More varied rotations for organic moodboard feel
+  const rotations = [
+    'rotate-[-1deg]',
+    'rotate-[0.8deg]',
+    'rotate-[-0.6deg]',
+    'rotate-[1.2deg]',
+    'rotate-[-0.4deg]',
+    '', // No rotation
+    'rotate-[0.5deg]',
+    'rotate-[-0.7deg]',
+  ];
+  const rotation = rotations[index % rotations.length];
+  
+  // Vary z-index for layered effect
+  const zIndex = index % 8 < 2 ? 'z-10' : index % 8 < 4 ? 'z-5' : 'z-0';
 
   return (
     <motion.div
-      className={cn(colSpan, rowSpan, className)}
-      initial={{ opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: index * delayMultiplier, duration: 0.4 }}
+      className={cn(
+        colSpan, 
+        rowSpan, 
+        rotation,
+        zIndex,
+        'transition-all duration-300 hover:z-30 hover:scale-[1.02]',
+        className
+      )}
+      initial={{ opacity: 0, scale: 0.9, y: 10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ delay: index * delayMultiplier, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
       {children}
     </motion.div>
@@ -153,7 +191,6 @@ export function BentoImageCard({
     <div
       className={cn(
         'group relative w-full h-full overflow-hidden rounded-sm',
-        'bg-black/5 dark:bg-white/5',
         'flex items-center justify-center',
         'transition-all duration-300',
         onClick && 'cursor-pointer',

@@ -218,9 +218,9 @@ export default function Photography() {
             transition={{ duration: 0.2 }}
           >
             {viewMode === 'bento' ? (
-              /* Bento Grid - full width breakout */
-              <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] px-2 sm:px-5 md:px-20">
-                <BentoGrid columns={{ sm: 4, md: 5, lg: 6 }} gap="md" rowHeight={{ base: 120, sm: 140, md: 160 }}>
+              /* Bento Grid - full width breakout, floating moodboard style */
+              <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] px-2 sm:px-4 md:px-16">
+                <BentoGrid columns={{ sm: 5, md: 7, lg: 10 }} gap="sm" rowHeight={{ base: 80, sm: 90, md: 100 }}>
                   {posts.map((post, i) => {
                     const isCarousel = post.carouselInfo !== undefined;
                     const carouselTotal = post.carouselInfo?.totalImages;
