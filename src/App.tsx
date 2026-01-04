@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import Writing from './pages/Writing';
 import WritingPost from './pages/WritingPost';
 import Work from './pages/Work';
+import Photography from './pages/Photography';
 import Resources from './pages/Resources';
 import NotFound from './pages/NotFound';
 
@@ -46,6 +47,7 @@ function App() {
                 <Route path="/writing" element={<Writing />} />
                 <Route path="/writing/:slug" element={<WritingPost />} />
                 <Route path="/work" element={<Work />} />
+                <Route path="/photography" element={<Photography />} />
                 <Route path="/resources" element={<Resources />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
