@@ -17,13 +17,40 @@ import { InstagramPost, formatPostDate } from '@/lib/instagram';
 
 interface LightboxProps {
   post: InstagramPost | null;
+  carouselIndex?: number;
   isOpen: boolean;
   onClose: () => void;
   onNext?: () => void;
   onPrev?: () => void;
 }
 
-export default function Lightbox({ post, isOpen, onClose, onNext, onPrev }: LightboxProps) {
+export default function Lightbox({ post, carouselIndex = 0, isOpen, onClose, onNext, onPrev }: LightboxProps) {
+  // Get the current image URL (handles carousel posts)
+  const getCurrentImageUrl = () => {
+    if (!post) return '';
+    
+    if (post.media_type === 'CAROUSEL_ALBUM' && post.children?.data) {
+      const imageChildren = post.children.data.filter(c => c.media_type === 'IMAGE');
+      const currentImage = imageChildren[carouselIndex];
+      return currentImage?.media_url || post.media_url;
+    }
+    
+    return post.media_url;
+  };
+  
+  const getCarouselInfo = () => {
+    if (post?.media_type === 'CAROUSEL_ALBUM' && post.children?.data) {
+      const imageChildren = post.children.data.filter(c => c.media_type === 'IMAGE');
+      return {
+        current: carouselIndex + 1,
+        total: imageChildren.length,
+        hasMultiple: imageChildren.length > 1,
+      };
+    }
+    return null;
+  };
+  
+  const carouselInfo = getCarouselInfo();
   // Handle keyboard navigation
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') onClose();
@@ -69,10 +96,16 @@ export default function Lightbox({ post, isOpen, onClose, onNext, onPrev }: Ligh
             {/* Image */}
             <div className="relative flex-shrink-0 max-h-[70vh] md:max-h-[85vh]">
               <img
-                src={post.media_url}
+                src={getCurrentImageUrl()}
                 alt={post.caption || 'Photography'}
                 className="max-w-full max-h-[70vh] md:max-h-[85vh] w-auto h-auto object-contain rounded-sm"
               />
+              {/* Carousel indicator */}
+              {carouselInfo && carouselInfo.hasMultiple && (
+                <div className="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                  {carouselInfo.current} / {carouselInfo.total}
+                </div>
+              )}
             </div>
             
             {/* Sidebar info */}

@@ -7,11 +7,11 @@
 
 export default function InstagramProfileSkeleton() {
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6">
+    <div className="w-full max-w-6xl mx-auto px-6 sm:px-8 md:px-10">
       {/* Profile Header Skeleton */}
-      <div className="mb-8 sm:mb-12">
+      <div className="mb-6 sm:mb-8">
         {/* Profile Info Skeleton */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Username and Name */}
           <div className="space-y-2">
             <div className="h-6 w-32 bg-black/5 dark:bg-white/5 rounded animate-pulse" />

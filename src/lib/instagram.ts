@@ -22,6 +22,12 @@ export interface InstagramPost {
   children?: {
     data: InstagramMedia[];
   };
+  carouselInfo?: {
+    parentId: string;
+    currentIndex: number;
+    totalImages: number;
+    allImages: string[];
+  };
 }
 
 export interface InstagramMedia {
@@ -46,6 +52,7 @@ export interface InstagramProfileResponse {
   profile: InstagramProfile | null;
   error?: string;
 }
+
 
 const INSTAGRAM_USER_ID = import.meta.env.VITE_INSTAGRAM_USER_ID;
 const INSTAGRAM_ACCESS_TOKEN = import.meta.env.VITE_INSTAGRAM_ACCESS_TOKEN;
@@ -111,6 +118,45 @@ export function formatPostDate(timestamp: string): string {
     day: 'numeric',
     year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined 
   });
+}
+
+/**
+ * Expand carousel posts into individual image posts
+ * Returns an array of posts where carousel albums are expanded into multiple posts
+ */
+export function expandCarouselPosts(posts: InstagramPost[]): InstagramPost[] {
+  const expanded: InstagramPost[] = [];
+  
+  for (const post of posts) {
+    if (post.media_type === 'CAROUSEL_ALBUM' && post.children?.data) {
+      // Filter only images from carousel
+      const imageChildren = post.children.data.filter(
+        (child) => child.media_type === 'IMAGE'
+      );
+      
+      // Create a post for each image in the carousel
+      imageChildren.forEach((child, index) => {
+        expanded.push({
+          ...post,
+          id: `${post.id}_${child.id}`, // Unique ID for each carousel image
+          media_type: 'IMAGE',
+          media_url: child.media_url,
+          // Store carousel info for lightbox navigation
+          carouselInfo: {
+            parentId: post.id,
+            currentIndex: index,
+            totalImages: imageChildren.length,
+            allImages: imageChildren.map(c => c.media_url),
+          },
+        });
+      });
+    } else {
+      // Regular single image post
+      expanded.push(post);
+    }
+  }
+  
+  return expanded;
 }
 
 /**

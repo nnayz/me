@@ -38,7 +38,7 @@ function App() {
               'py-20 sm:py-24',
               'motion-reduce:transform-none motion-reduce:transition-none',
               'font-sans antialiased',
-              '[&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_input]:pointer-events-auto [&_nav]:pointer-events-auto',
+              '[&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_input]:pointer-events-auto [&_nav]:pointer-events-auto [&_div[onclick]]:pointer-events-auto [&_div[class*="cursor-pointer"]]:pointer-events-auto',
             )}
           >
             <AnimateEnter>

@@ -9,7 +9,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/className';
-import { fetchInstagramPosts, fetchInstagramProfile, InstagramPost, formatPostDate } from '@/lib/instagram';
+import { fetchInstagramPosts, fetchInstagramProfile, InstagramPost, formatPostDate, expandCarouselPosts } from '@/lib/instagram';
 import { BentoGrid, BentoGridItem, BentoImageCard } from '@components/BentoGrid';
 import InstagramProfile from '@components/InstagramProfile';
 import InstagramProfileSkeleton from '@components/InstagramProfileSkeleton';
@@ -36,9 +36,11 @@ type ViewMode = 'bento' | 'profile';
 
 export default function Photography() {
   const [posts, setPosts] = useState<InstagramPost[]>([]);
+  const [originalPosts, setOriginalPosts] = useState<InstagramPost[]>([]); // Store original posts for lightbox
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPost, setSelectedPost] = useState<InstagramPost | null>(null);
+  const [selectedCarouselIndex, setSelectedCarouselIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('profile');
   const [username, setUsername] = useState<string>('nasrultakesphotos');
@@ -56,7 +58,10 @@ export default function Photography() {
       if (postsResult.error) {
         setError(postsResult.error);
       } else {
-        setPosts(postsResult.posts);
+        // Store original posts for lightbox navigation
+        setOriginalPosts(postsResult.posts);
+        // Expand carousel posts into individual images for grid display
+        setPosts(expandCarouselPosts(postsResult.posts));
       }
       
       // Set profile data
@@ -73,22 +78,51 @@ export default function Photography() {
   }, []);
 
   const openLightbox = (post: InstagramPost) => {
+    // If this is an expanded carousel image, find the original carousel post
+    if (post.carouselInfo) {
+      const originalPost = originalPosts.find(p => p.id === post.carouselInfo!.parentId);
+      if (originalPost) {
+        setSelectedPost(originalPost);
+        setSelectedCarouselIndex(post.carouselInfo.currentIndex);
+        setLightboxOpen(true);
+        return;
+      }
+    }
+    
+    // Regular post or carousel post (from profile view)
     setSelectedPost(post);
+    setSelectedCarouselIndex(0);
     setLightboxOpen(true);
   };
 
   const closeLightbox = () => {
     setLightboxOpen(false);
-    setTimeout(() => setSelectedPost(null), 200);
+    setTimeout(() => {
+      setSelectedPost(null);
+      setSelectedCarouselIndex(0);
+    }, 200);
   };
 
   const navigateLightbox = (direction: 'next' | 'prev') => {
     if (!selectedPost) return;
-    const currentIndex = posts.findIndex(p => p.id === selectedPost.id);
+    
+    // Handle carousel navigation within a post
+    if (selectedPost.media_type === 'CAROUSEL_ALBUM' && selectedPost.children?.data) {
+      const imageChildren = selectedPost.children.data.filter(c => c.media_type === 'IMAGE');
+      const newIndex = direction === 'next'
+        ? (selectedCarouselIndex + 1) % imageChildren.length
+        : (selectedCarouselIndex - 1 + imageChildren.length) % imageChildren.length;
+      setSelectedCarouselIndex(newIndex);
+      return;
+    }
+    
+    // Navigate between different posts
+    const currentIndex = originalPosts.findIndex(p => p.id === selectedPost.id);
     const newIndex = direction === 'next' 
-      ? (currentIndex + 1) % posts.length 
-      : (currentIndex - 1 + posts.length) % posts.length;
-    setSelectedPost(posts[newIndex]);
+      ? (currentIndex + 1) % originalPosts.length 
+      : (currentIndex - 1 + originalPosts.length) % originalPosts.length;
+    setSelectedPost(originalPosts[newIndex]);
+    setSelectedCarouselIndex(0);
   };
 
   return (
@@ -187,40 +221,55 @@ export default function Photography() {
               /* Bento Grid - full width breakout */
               <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] px-2 sm:px-5 md:px-20">
                 <BentoGrid columns={{ sm: 4, md: 5, lg: 6 }} gap="md" rowHeight={{ base: 120, sm: 140, md: 160 }}>
-                  {posts.map((post, i) => (
-                    <BentoGridItem key={post.id} index={i}>
-                      <BentoImageCard
-                        src={post.media_url}
-                        alt={post.caption || 'Photography'}
-                        title={post.caption?.slice(0, 50)}
-                        subtitle={formatPostDate(post.timestamp)}
-                        onClick={() => openLightbox(post)}
-                        topRightElement={
-                          <a
-                            href={post.permalink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="block p-1 text-white/60 hover:text-white transition-colors"
-                            aria-label="View on Instagram"
-                          >
-                            <InstagramIcon className="w-3.5 h-3.5" />
-                          </a>
-                        }
-                      />
-                    </BentoGridItem>
-                  ))}
+                  {posts.map((post, i) => {
+                    const isCarousel = post.carouselInfo !== undefined;
+                    const carouselTotal = post.carouselInfo?.totalImages;
+                    
+                    return (
+                      <BentoGridItem key={post.id} index={i}>
+                        <BentoImageCard
+                          src={post.media_url}
+                          alt={post.caption || 'Photography'}
+                          title={post.caption?.slice(0, 50)}
+                          subtitle={formatPostDate(post.timestamp)}
+                          onClick={() => openLightbox(post)}
+                          topRightElement={
+                            <div className="flex items-center gap-1">
+                              {isCarousel && carouselTotal && carouselTotal > 1 && (
+                                <div className="bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded flex items-center gap-0.5">
+                                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z"/>
+                                  </svg>
+                                  <span>{carouselTotal}</span>
+                                </div>
+                              )}
+                              <a
+                                href={post.permalink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="block p-1 text-white/60 hover:text-white transition-colors"
+                                aria-label="View on Instagram"
+                              >
+                                <InstagramIcon className="w-3.5 h-3.5" />
+                              </a>
+                            </div>
+                          }
+                        />
+                      </BentoGridItem>
+                    );
+                  })}
                 </BentoGrid>
               </div>
             ) : (
-              /* Instagram Profile View */
+              /* Instagram Profile View - use original posts, not expanded */
               <InstagramProfile
-                posts={posts}
+                posts={originalPosts}
                 username={username}
                 fullName="Nasrul Huda"
                 bio="Let me tell you a story"
                 stats={{
-                  posts: posts.length,
+                  posts: originalPosts.length,
                   followers: undefined,
                   following: undefined,
                 }}
@@ -241,11 +290,13 @@ export default function Photography() {
       {/* Lightbox */}
       <Lightbox
         post={selectedPost}
+        carouselIndex={selectedCarouselIndex}
         isOpen={lightboxOpen}
         onClose={closeLightbox}
         onNext={() => navigateLightbox('next')}
         onPrev={() => navigateLightbox('prev')}
       />
+
     </motion.div>
   );
 }
