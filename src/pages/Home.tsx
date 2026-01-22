@@ -190,8 +190,8 @@ function Contact() {
           website="X"
         />
         <ContactLink
-          email="hi@nasrul.info"
-          title="hi@nasrul.info"
+          email="nasrul.huda.ds@gmail.com"
+          title="nasrul.huda.ds@gmail.com"
           website="Email"
         />
         <ContactLink href="https://www.icloud.com/iclouddrive/019RBdIabpIVIYYd0D1u4Z_ug#resume" title="drive" website="CV" />
