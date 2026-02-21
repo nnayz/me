@@ -36,14 +36,6 @@ export const actions: Action[] = [
     color: "#FF7F50",
     iconColor: "#673D13",
   },
-  {
-    name: "Photography",
-    keywords: "photography",
-    href: "/photography",
-    section: "Navigation",
-    color: "#8B5CF6",
-    iconColor: "#3B1D6E",
-  },
   // {
   //   name: "GitHub",
   //   keywords: "github",
@@ -101,12 +93,6 @@ export const Navigation: Action[] = [
     name: "Highlights",
     keywords: "highlights",
     href: "/work",
-    section: "Navigation",
-  },
-  {
-    name: "Photography",
-    keywords: "photography",
-    href: "/photography",
     section: "Navigation",
   },
 ];

@@ -135,7 +135,7 @@ function ContactLink({
             className="text-secondary hover:text-primary transition-colors duration-150 flex items-center gap-1 text-sm"
             href={link}
             rel="noopener noreferrer"
-            target="_blank"
+            target={link.endsWith("nasrul.info") ? "_blank" : "_self"}
           >
             <span>{titles[index] ?? link}</span>
             <svg
@@ -194,7 +194,11 @@ function Contact() {
           title="nasrul.huda.ds@gmail.com"
           website="Email"
         />
-        <ContactLink href="https://www.icloud.com/iclouddrive/019RBdIabpIVIYYd0D1u4Z_ug#resume" title="drive" website="CV" />
+        <ContactLink 
+          href="https://resume.nasrul.info" 
+          title="View" 
+          website="Resume" 
+        />
       </div>
     </motion.div>
   );
