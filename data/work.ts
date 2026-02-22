@@ -22,6 +22,14 @@ export const works: WorkCardType[] = [
     tags: ["AI", "Digital Twins", "Agentic Workflows", "Python", "Machine Learning"],
   },
   {
+    title: "Few shot meta learning classification of bioacoustic sounds using prototypical networks",
+    href: [ "https://github.com/nnayz/uhh_project_dsai" ],
+    company: "DSAI Project",
+    h: "h-48",
+    content: "Developed a prototypical networks-based meta-learning framework for few-shot bioacoustics classification as part of the DCASE Challenge. Achieved efficient sound classification with minimal labeled data, advancing practical applications in environmental monitoring and wildlife research.",
+    tags: [ "Deep Learning", "Signal Processing", "Python", "Meta Learning" ]
+  },
+  {
     title: "Federated fine-tuning of nicheformer on spatial transcriptomics data",
     href: [ "https://github.com/nnayz/ft-nicheformer" ],
     company: "Personal Project",
