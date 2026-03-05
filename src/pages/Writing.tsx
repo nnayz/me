@@ -1,8 +1,8 @@
-import { allWritings } from 'content-collections';
 import { cn } from '@/lib/className';
 import DateViewer from '@components/DateView';
-import { Link } from 'react-router-dom';
+import { allWritings } from 'content-collections';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 type Post = {
   slug: string;
@@ -14,12 +14,14 @@ type Post = {
 function getData(): { posts: Post[] } {
   try {
     const posts = ((allWritings as any[]) || [])
-      .map((post: any): Post => ({
-        slug: post.slug,
-        title: post.title,
-        summary: post.summary,
-        publishedAt: post.publishedAt,
-      }))
+      .map(
+        (post: any): Post => ({
+          slug: post.slug,
+          title: post.title,
+          summary: post.summary,
+          publishedAt: post.publishedAt,
+        }),
+      )
       .sort(
         (a: Post, b: Post) =>
           Number(new Date(b.publishedAt)) - Number(new Date(a.publishedAt)),
@@ -41,16 +43,20 @@ const stagger = {
 
 const fadeInUp = {
   initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
 };
 
 function EmptyState() {
   return (
-    <motion.div 
+    <motion.div
       variants={fadeInUp}
       className="text-tertiary flex flex-col items-center justify-center py-12 text-center"
     >
-      <div className="mb-3 h-10 w-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center">
+      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-black/5 dark:bg-white/5">
         <svg
           className="h-5 w-5 opacity-50"
           fill="none"
@@ -66,9 +72,10 @@ function EmptyState() {
           />
         </svg>
       </div>
-      <p className="text-secondary mb-1 text-sm font-medium">No posts yet</p>
+      <p className="mb-1 text-sm font-medium text-secondary">No posts yet</p>
       <p className="text-tertiary max-w-xs text-xs">
-        Writing is coming soon. Check back later for thoughts, ideas, and updates.
+        Writing is coming soon. Check back later for thoughts, ideas, and
+        updates.
       </p>
     </motion.div>
   );
@@ -77,8 +84,8 @@ function EmptyState() {
 export default function Writing() {
   const { posts } = getData();
   return (
-    <motion.div 
-      className="mx-auto max-w-xl px-6 space-y-6"
+    <motion.div
+      className="mx-auto max-w-xl space-y-6 px-6"
       variants={stagger}
       initial="initial"
       animate="animate"
@@ -86,9 +93,12 @@ export default function Writing() {
       <motion.div variants={fadeInUp} className="space-y-2">
         <h1>Writing</h1>
         <p className="text-tertiary text-sm">
-          If you&apos;re interested in exploring the articles that inspire me and
-          shape my thinking, check out{' '}
-          <Link className="underline decoration-black/30 dark:decoration-white/30 underline-offset-2 hover:decoration-black dark:hover:decoration-white transition-colors" to={'/resources'}>
+          If you&apos;re interested in exploring the articles that inspire me
+          and shape my thinking, check out{' '}
+          <Link
+            className="underline decoration-black/30 underline-offset-2 transition-colors hover:decoration-black dark:decoration-white/30 dark:hover:decoration-white"
+            to={'/resources'}
+          >
             Resources
           </Link>
           .
@@ -105,14 +115,14 @@ export default function Writing() {
             >
               <Link
                 className={cn(
-                  '-mx-2 flex flex-row justify-between items-center px-2 py-1.5',
+                  '-mx-2 flex flex-row items-center justify-between px-2 py-1.5',
                   'hover:bg-black/5 dark:hover:bg-white/5',
-                  'transition-all duration-150 rounded',
+                  'rounded transition-all duration-150',
                   'group',
                 )}
                 to={`/writing/${post.slug}`}
               >
-                <span className="text-secondary mr-2 flex-grow truncate group-hover:text-primary transition-colors text-sm">
+                <span className="mr-2 flex-grow truncate text-sm text-secondary transition-colors group-hover:text-primary">
                   {post.title}
                 </span>
                 <span className="text-quaternary flex-shrink-0 text-xs tabular-nums">

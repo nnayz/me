@@ -3,14 +3,13 @@
  *
  * Displays projects and professional work in an expanded blog-like layout.
  */
-
+import { Android } from '@/components/ui/android';
+import Iphone from '@/components/ui/iphone';
+import { Safari } from '@/components/ui/safari';
+import { cn } from '@/lib/className';
 import { works, WorkCardType } from '@data/work';
 import { motion } from 'framer-motion';
-import { cn } from '@/lib/className';
 import { FaExternalLinkAlt, FaGithub } from 'react-icons/fa';
-import { Safari } from '@/components/ui/safari';
-import Iphone from '@/components/ui/iphone';
-import { Android } from '@/components/ui/android';
 
 const stagger = {
   animate: {
@@ -22,7 +21,11 @@ const stagger = {
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
 };
 
 export default function Work() {
@@ -36,9 +39,7 @@ export default function Work() {
       {/* Header */}
       <motion.div variants={fadeInUp} className="flex flex-col gap-1">
         <h1>Highlights</h1>
-        <p className="text-tertiary text-sm">
-          Projects and professional work.
-        </p>
+        <p className="text-tertiary text-sm">Projects and professional work.</p>
       </motion.div>
 
       {/* Work items */}
@@ -57,7 +58,11 @@ function WorkCard({ work, index }: { work: WorkCardType; index: number }) {
       className="flex flex-col gap-5"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{
+        delay: index * 0.1,
+        duration: 0.5,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
     >
       {/* Image in device frame */}
       {work.img && work.device === 'iphone' ? (
@@ -71,15 +76,17 @@ function WorkCard({ work, index }: { work: WorkCardType; index: number }) {
             className="h-[500px] w-auto rounded-md shadow-sm"
           />
         </div>
-      ) : work.img && (
-        <div className="relative w-full">
-          <Safari
-            url={work.url}
-            imageSrc={work.img}
-            className="w-full h-auto rounded-md shadow-sm"
-            mode="default"
-          />
-        </div>
+      ) : (
+        work.img && (
+          <div className="relative w-full">
+            <Safari
+              url={work.url}
+              imageSrc={work.img}
+              className="h-auto w-full rounded-md shadow-sm"
+              mode="default"
+            />
+          </div>
+        )
       )}
 
       {/* Content */}
@@ -87,7 +94,7 @@ function WorkCard({ work, index }: { work: WorkCardType; index: number }) {
         {/* Title and meta */}
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-semibold">{work.title}</h2>
-          <div className="flex items-center gap-2 text-tertiary text-xs">
+          <div className="text-tertiary flex items-center gap-2 text-xs">
             {work.role && <span>{work.role}</span>}
             {work.role && work.company && <span>·</span>}
             {work.company && <span>{work.company}</span>}
@@ -96,12 +103,14 @@ function WorkCard({ work, index }: { work: WorkCardType; index: number }) {
 
         {/* Description */}
         {work.content && (
-          <p className="text-secondary text-sm leading-relaxed">{work.content}</p>
+          <p className="text-sm leading-relaxed text-secondary">
+            {work.content}
+          </p>
         )}
 
         {/* Tags */}
         {work.tags && work.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-1">
+          <div className="mt-1 flex flex-wrap gap-1.5">
             {work.tags.map((tag) => (
               <span
                 key={tag}
@@ -118,26 +127,30 @@ function WorkCard({ work, index }: { work: WorkCardType; index: number }) {
         )}
 
         {/* Link */}
-        <div className="flex flex-wrap gap-1.5 mt-1">
-        {work.href && work.href.length > 0 && 
-          work.href.map((href, index) => (
-          <a
-            key={index}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              'inline-flex items-center gap-1.5 mt-1',
-              'text-sm text-secondary hover:text-primary',
-              'transition-colors duration-200 w-fit',
-            )}
-          >
-            {href.startsWith('https://github.com') ? <FaGithub /> : <FaExternalLinkAlt />}
-          </a>
-        ))}
+        <div className="mt-1 flex flex-wrap gap-1.5">
+          {work.href &&
+            work.href.length > 0 &&
+            work.href.map((href, index) => (
+              <a
+                key={index}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  'mt-1 inline-flex items-center gap-1.5',
+                  'text-sm text-secondary hover:text-primary',
+                  'w-fit transition-colors duration-200',
+                )}
+              >
+                {href.startsWith('https://github.com') ? (
+                  <FaGithub />
+                ) : (
+                  <FaExternalLinkAlt />
+                )}
+              </a>
+            ))}
         </div>
       </div>
     </motion.article>
   );
 }
-

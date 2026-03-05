@@ -1,11 +1,11 @@
-import type { SVGProps } from "react"
-import { useEffect, useState } from "react"
+import type { SVGProps } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface IphoneProps extends SVGProps<SVGSVGElement> {
-  width?: number
-  height?: number
-  src?: string
-  videoSrc?: string
+  width?: number;
+  height?: number;
+  src?: string;
+  videoSrc?: string;
 }
 
 export default function Iphone({
@@ -117,47 +117,56 @@ export default function Iphone({
       />
       <defs>
         <clipPath id="roundedCorners">
-          <rect height="843.5" rx="55.75" ry="55.75" width="389.5" x="21.25" y="19.25" />
+          <rect
+            height="843.5"
+            rx="55.75"
+            ry="55.75"
+            width="389.5"
+            x="21.25"
+            y="19.25"
+          />
         </clipPath>
       </defs>
     </svg>
-  )
+  );
 }
 
 // Demo
 function useResponsiveSize(aspectRatio: number) {
-  const [size, setSize] = useState<{ width: number; height: number } | null>(null)
+  const [size, setSize] = useState<{ width: number; height: number } | null>(
+    null,
+  );
 
   useEffect(() => {
     const updateSize = () => {
-      const padding = 32
-      const vh = window.innerHeight - padding
-      const vw = window.innerWidth - padding
+      const padding = 32;
+      const vh = window.innerHeight - padding;
+      const vw = window.innerWidth - padding;
 
-      let height = vh * 0.95
-      let width = height * aspectRatio
+      let height = vh * 0.95;
+      let width = height * aspectRatio;
 
       if (width > vw * 0.95) {
-        width = vw * 0.95
-        height = width / aspectRatio
+        width = vw * 0.95;
+        height = width / aspectRatio;
       }
 
-      setSize({ width: Math.round(width), height: Math.round(height) })
-    }
+      setSize({ width: Math.round(width), height: Math.round(height) });
+    };
 
-    updateSize()
-    window.addEventListener("resize", updateSize)
-    return () => window.removeEventListener("resize", updateSize)
-  }, [aspectRatio])
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, [aspectRatio]);
 
-  return size
+  return size;
 }
 
 export function IphoneDemo() {
-  const size = useResponsiveSize(433 / 882)
+  const size = useResponsiveSize(433 / 882);
 
   if (!size) {
-    return <div className="fixed inset-0 bg-muted/50 animate-pulse" />
+    return <div className="fixed inset-0 animate-pulse bg-muted/50" />;
   }
 
   return (
@@ -168,5 +177,5 @@ export function IphoneDemo() {
         src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=1600&fit=crop"
       />
     </div>
-  )
+  );
 }

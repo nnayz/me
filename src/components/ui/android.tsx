@@ -1,14 +1,20 @@
-import type { SVGProps } from "react"
-import { useEffect, useState } from "react"
+import type { SVGProps } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface AndroidProps extends SVGProps<SVGSVGElement> {
-  width?: number
-  height?: number
-  src?: string
-  videoSrc?: string
+  width?: number;
+  height?: number;
+  src?: string;
+  videoSrc?: string;
 }
 
-export const Android = ({ width = 380, height = 830, src, videoSrc, ...props }: AndroidProps) => {
+export const Android = ({
+  width = 380,
+  height = 830,
+  src,
+  videoSrc,
+  ...props
+}: AndroidProps) => {
   // viewBox is fixed at original design dimensions for proper scaling
   return (
     <svg
@@ -44,8 +50,18 @@ export const Android = ({ width = 380, height = 830, src, videoSrc, ...props }: 
           d="M9.25 48C9.25 29.3604 24.3604 14.25 43 14.25H335C353.64 14.25 368.75 29.3604 368.75 48V780C368.75 798.64 353.64 813.75 335 813.75H43C24.3604 813.75 9.25 798.64 9.25 780V48Z"
         />
       </g>
-      <circle className="fill-white dark:fill-[#262626]" cx="189" cy="28" r="9" />
-      <circle className="fill-[#E5E5E5] dark:fill-[#404040]" cx="189" cy="28" r="4" />
+      <circle
+        className="fill-white dark:fill-[#262626]"
+        cx="189"
+        cy="28"
+        r="9"
+      />
+      <circle
+        className="fill-[#E5E5E5] dark:fill-[#404040]"
+        cx="189"
+        cy="28"
+        r="4"
+      />
       {src && (
         <image
           clipPath="url(#android-clip)"
@@ -58,7 +74,13 @@ export const Android = ({ width = 380, height = 830, src, videoSrc, ...props }: 
         />
       )}
       {videoSrc && (
-        <foreignObject clipPath="url(#android-clip)" height="800" width="360" x="9" y="14">
+        <foreignObject
+          clipPath="url(#android-clip)"
+          height="800"
+          width="360"
+          x="9"
+          y="14"
+        >
           <video
             autoPlay
             className="size-full object-cover"
@@ -82,34 +104,36 @@ export const Android = ({ width = 380, height = 830, src, videoSrc, ...props }: 
         </clipPath>
       </defs>
     </svg>
-  )
-}
+  );
+};
 
 // Demo
 function useResponsiveSize(aspectRatio: number) {
-  const [size, setSize] = useState<{ width: number; height: number } | null>(null)
+  const [size, setSize] = useState<{ width: number; height: number } | null>(
+    null,
+  );
 
   useEffect(() => {
     const updateSize = () => {
-      const padding = 32
-      const vh = window.innerHeight - padding
-      const vw = window.innerWidth - padding
+      const padding = 32;
+      const vh = window.innerHeight - padding;
+      const vw = window.innerWidth - padding;
 
-      let height = vh * 0.95
-      let width = height * aspectRatio
+      let height = vh * 0.95;
+      let width = height * aspectRatio;
 
       if (width > vw * 0.95) {
-        width = vw * 0.95
-        height = width / aspectRatio
+        width = vw * 0.95;
+        height = width / aspectRatio;
       }
 
-      setSize({ width: Math.round(width), height: Math.round(height) })
-    }
+      setSize({ width: Math.round(width), height: Math.round(height) });
+    };
 
-    updateSize()
-    window.addEventListener("resize", updateSize)
-    return () => window.removeEventListener("resize", updateSize)
-  }, [aspectRatio])
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, [aspectRatio]);
 
-  return size
+  return size;
 }

@@ -1,19 +1,28 @@
 /**
  * Photography Page
- * 
+ *
  * Displays Instagram photos in two layout options:
  * - Bento Grid: Asymmetric, curated layout
  * - Profile View: Instagram-style profile grid
  */
-
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/className';
-import { fetchInstagramPosts, fetchInstagramProfile, InstagramPost, formatPostDate, expandCarouselPosts } from '@/lib/instagram';
-import { BentoGrid, BentoGridItem, BentoImageCard } from '@components/BentoGrid';
+import {
+  fetchInstagramPosts,
+  fetchInstagramProfile,
+  InstagramPost,
+  formatPostDate,
+  expandCarouselPosts,
+} from '@/lib/instagram';
+import {
+  BentoGrid,
+  BentoGridItem,
+  BentoImageCard,
+} from '@components/BentoGrid';
 import InstagramProfile from '@components/InstagramProfile';
 import InstagramProfileSkeleton from '@components/InstagramProfileSkeleton';
 import Lightbox from '@components/Lightbox';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 const stagger = {
   animate: {
@@ -25,10 +34,10 @@ const stagger = {
 
 const fadeInUp = {
   initial: { opacity: 0, y: 16 },
-  animate: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] } 
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] },
   },
 };
 
@@ -48,13 +57,13 @@ export default function Photography() {
   useEffect(() => {
     async function loadData() {
       setLoading(true);
-      
+
       // Fetch posts and profile in parallel
       const [postsResult, profileResult] = await Promise.all([
         fetchInstagramPosts(25),
         fetchInstagramProfile(),
       ]);
-      
+
       if (postsResult.error) {
         setError(postsResult.error);
       } else {
@@ -63,24 +72,26 @@ export default function Photography() {
         // Expand carousel posts into individual images for grid display
         setPosts(expandCarouselPosts(postsResult.posts));
       }
-      
+
       // Set profile data
       if (profileResult.profile) {
         if (profileResult.profile.username) {
           setUsername(profileResult.profile.username);
         }
       }
-      
+
       setLoading(false);
     }
-    
+
     loadData();
   }, []);
 
   const openLightbox = (post: InstagramPost) => {
     // If this is an expanded carousel image, find the original carousel post
     if (post.carouselInfo) {
-      const originalPost = originalPosts.find(p => p.id === post.carouselInfo!.parentId);
+      const originalPost = originalPosts.find(
+        (p) => p.id === post.carouselInfo!.parentId,
+      );
       if (originalPost) {
         setSelectedPost(originalPost);
         setSelectedCarouselIndex(post.carouselInfo.currentIndex);
@@ -88,7 +99,7 @@ export default function Photography() {
         return;
       }
     }
-    
+
     // Regular post or carousel post (from profile view)
     setSelectedPost(post);
     setSelectedCarouselIndex(0);
@@ -105,22 +116,32 @@ export default function Photography() {
 
   const navigateLightbox = (direction: 'next' | 'prev') => {
     if (!selectedPost) return;
-    
+
     // Handle carousel navigation within a post
-    if (selectedPost.media_type === 'CAROUSEL_ALBUM' && selectedPost.children?.data) {
-      const imageChildren = selectedPost.children.data.filter(c => c.media_type === 'IMAGE');
-      const newIndex = direction === 'next'
-        ? (selectedCarouselIndex + 1) % imageChildren.length
-        : (selectedCarouselIndex - 1 + imageChildren.length) % imageChildren.length;
+    if (
+      selectedPost.media_type === 'CAROUSEL_ALBUM' &&
+      selectedPost.children?.data
+    ) {
+      const imageChildren = selectedPost.children.data.filter(
+        (c) => c.media_type === 'IMAGE',
+      );
+      const newIndex =
+        direction === 'next'
+          ? (selectedCarouselIndex + 1) % imageChildren.length
+          : (selectedCarouselIndex - 1 + imageChildren.length) %
+            imageChildren.length;
       setSelectedCarouselIndex(newIndex);
       return;
     }
-    
+
     // Navigate between different posts
-    const currentIndex = originalPosts.findIndex(p => p.id === selectedPost.id);
-    const newIndex = direction === 'next' 
-      ? (currentIndex + 1) % originalPosts.length 
-      : (currentIndex - 1 + originalPosts.length) % originalPosts.length;
+    const currentIndex = originalPosts.findIndex(
+      (p) => p.id === selectedPost.id,
+    );
+    const newIndex =
+      direction === 'next'
+        ? (currentIndex + 1) % originalPosts.length
+        : (currentIndex - 1 + originalPosts.length) % originalPosts.length;
     setSelectedPost(originalPosts[newIndex]);
     setSelectedCarouselIndex(0);
   };
@@ -133,32 +154,35 @@ export default function Photography() {
       animate="animate"
     >
       {/* Header - constrained */}
-      <motion.div variants={fadeInUp} className="max-w-6xl mx-auto px-6 sm:px-8 md:px-10 mb-6 sm:mb-8">
+      <motion.div
+        variants={fadeInUp}
+        className="mx-auto mb-6 max-w-6xl px-6 sm:mb-8 sm:px-8 md:px-10"
+      >
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="mb-1">Photography</h1>
-            <p className="text-tertiary text-[11px] sm:text-xs max-w-md">
+            <p className="text-tertiary max-w-md text-[11px] sm:text-xs">
               Moments captured through my lens. Updated from{' '}
-              <a 
+              <a
                 href={`https://instagram.com/${username}`}
-                target="_blank" 
+                target="_blank"
                 rel="noopener noreferrer"
-                className="underline decoration-black/20 dark:decoration-white/20 hover:decoration-black/50 dark:hover:decoration-white/50 transition-colors"
+                className="underline decoration-black/20 transition-colors hover:decoration-black/50 dark:decoration-white/20 dark:hover:decoration-white/50"
               >
                 @{username}
               </a>
             </p>
           </div>
-          
+
           {/* View Toggle */}
-          <div className="flex items-center gap-1 border border-black/10 dark:border-white/10 rounded-lg p-0.5">
+          <div className="flex items-center gap-1 rounded-lg border border-black/10 p-0.5 dark:border-white/10">
             <button
               onClick={() => setViewMode('bento')}
               className={cn(
                 'px-3 py-1 text-xs font-medium transition-all duration-150',
                 viewMode === 'bento'
-                  ? 'bg-black text-white dark:bg-white dark:text-black rounded'
-                  : 'text-tertiary hover:text-primary'
+                  ? 'rounded bg-black text-white dark:bg-white dark:text-black'
+                  : 'text-tertiary hover:text-primary',
               )}
             >
               Grid
@@ -168,8 +192,8 @@ export default function Photography() {
               className={cn(
                 'px-3 py-1 text-xs font-medium transition-all duration-150',
                 viewMode === 'profile'
-                  ? 'bg-black text-white dark:bg-white dark:text-black rounded'
-                  : 'text-tertiary hover:text-primary'
+                  ? 'rounded bg-black text-white dark:bg-white dark:text-black'
+                  : 'text-tertiary hover:text-primary',
               )}
             >
               Profile
@@ -184,11 +208,15 @@ export default function Photography() {
           {viewMode === 'profile' ? (
             <InstagramProfileSkeleton />
           ) : (
-            <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] px-2 sm:px-3 md:px-4">
-              <BentoGrid columns={{ sm: 4, md: 5, lg: 6 }} gap="md" rowHeight={{ base: 120, sm: 140, md: 160 }}>
+            <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen px-2 sm:px-3 md:px-4">
+              <BentoGrid
+                columns={{ sm: 4, md: 5, lg: 6 }}
+                gap="md"
+                rowHeight={{ base: 120, sm: 140, md: 160 }}
+              >
                 {[...Array(8)].map((_, i) => (
                   <BentoGridItem key={i} index={i}>
-                    <div className="w-full h-full bg-black/5 dark:bg-white/5 rounded-sm animate-pulse" />
+                    <div className="h-full w-full animate-pulse rounded-sm bg-black/5 dark:bg-white/5" />
                   </BentoGridItem>
                 ))}
               </BentoGrid>
@@ -199,9 +227,9 @@ export default function Photography() {
 
       {/* Error state */}
       {error && !loading && (
-        <motion.div variants={fadeInUp} className="text-center py-12">
+        <motion.div variants={fadeInUp} className="py-12 text-center">
           <p className="text-tertiary text-sm">{error}</p>
-          <p className="text-quaternary text-xs mt-2">
+          <p className="text-quaternary mt-2 text-xs">
             Please check back later or visit my Instagram directly.
           </p>
         </motion.div>
@@ -219,12 +247,16 @@ export default function Photography() {
           >
             {viewMode === 'bento' ? (
               /* Bento Grid - full width breakout, floating moodboard style */
-              <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] px-2 sm:px-4 md:px-16">
-                <BentoGrid columns={{ sm: 5, md: 7, lg: 10 }} gap="sm" rowHeight={{ base: 80, sm: 90, md: 100 }}>
+              <div className="relative left-1/2 right-1/2 -mx-[50vw] w-screen px-2 sm:px-4 md:px-16">
+                <BentoGrid
+                  columns={{ sm: 5, md: 7, lg: 10 }}
+                  gap="sm"
+                  rowHeight={{ base: 80, sm: 90, md: 100 }}
+                >
                   {posts.map((post, i) => {
                     const isCarousel = post.carouselInfo !== undefined;
                     const carouselTotal = post.carouselInfo?.totalImages;
-                    
+
                     return (
                       <BentoGridItem key={post.id} index={i}>
                         <BentoImageCard
@@ -235,23 +267,29 @@ export default function Photography() {
                           onClick={() => openLightbox(post)}
                           topRightElement={
                             <div className="flex items-center gap-1">
-                              {isCarousel && carouselTotal && carouselTotal > 1 && (
-                                <div className="bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded flex items-center gap-0.5">
-                                  <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z"/>
-                                  </svg>
-                                  <span>{carouselTotal}</span>
-                                </div>
-                              )}
+                              {isCarousel &&
+                                carouselTotal &&
+                                carouselTotal > 1 && (
+                                  <div className="flex items-center gap-0.5 rounded bg-black/60 px-1.5 py-0.5 text-[9px] text-white">
+                                    <svg
+                                      className="h-2.5 w-2.5"
+                                      fill="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z" />
+                                    </svg>
+                                    <span>{carouselTotal}</span>
+                                  </div>
+                                )}
                               <a
                                 href={post.permalink}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="block p-1 text-white/60 hover:text-white transition-colors"
+                                className="block p-1 text-white/60 transition-colors hover:text-white"
                                 aria-label="View on Instagram"
                               >
-                                <InstagramIcon className="w-3.5 h-3.5" />
+                                <InstagramIcon className="h-3.5 w-3.5" />
                               </a>
                             </div>
                           }
@@ -282,7 +320,7 @@ export default function Photography() {
 
       {/* Empty state */}
       {!loading && !error && posts.length === 0 && (
-        <motion.div variants={fadeInUp} className="text-center py-12">
+        <motion.div variants={fadeInUp} className="py-12 text-center">
           <p className="text-tertiary text-sm">No photos yet.</p>
         </motion.div>
       )}
@@ -296,7 +334,6 @@ export default function Photography() {
         onNext={() => navigateLightbox('next')}
         onPrev={() => navigateLightbox('prev')}
       />
-
     </motion.div>
   );
 }
@@ -304,7 +341,7 @@ export default function Photography() {
 function InstagramIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
     </svg>
   );
 }

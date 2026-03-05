@@ -36,7 +36,7 @@ function Item({
 
   return (
     <a
-      className="-mx-2 flex cursor-ne-resize flex-row justify-between rounded-md px-2 py-2 transition-all duration-200 hover:bg-gray-500/10"
+      className="hover:bg-gray-500/10 -mx-2 flex cursor-ne-resize flex-row justify-between rounded-md px-2 py-2 transition-all duration-200"
       href={link}
       rel="noopener noreferrer"
       target="_blank"
@@ -44,12 +44,12 @@ function Item({
       <div className="h-8 w-8 flex-shrink-0">
         <img
           alt={`${title} favicon`}
-          className="h-full w-full rounded-md bg-gray-500/20 object-contain px-0.5 py-0.5"
+          className="bg-gray-500/20 h-full w-full rounded-md object-contain px-0.5 py-0.5"
           src={faviconUrl}
         />
       </div>{' '}
       <div className="ml-2 flex flex-grow flex-col">
-        <span className="text-secondary mr-2 flex-grow truncate">
+        <span className="mr-2 flex-grow truncate text-secondary">
           {title} ¬
         </span>
         <span className="text-tertiary flex-shrink">{description}</span>
@@ -57,4 +57,3 @@ function Item({
     </a>
   );
 }
-

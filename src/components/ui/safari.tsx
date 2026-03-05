@@ -1,20 +1,20 @@
-"use client"
+'use client';
 
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react';
 
-type SafariMode = "default" | "simple"
+type SafariMode = 'default' | 'simple';
 
 export interface SafariProps extends SVGProps<SVGSVGElement> {
-  url?: string
-  imageSrc?: string
-  videoSrc?: string
-  width?: number
-  height?: number
-  mode?: SafariMode
+  url?: string;
+  imageSrc?: string;
+  videoSrc?: string;
+  width?: number;
+  height?: number;
+  mode?: SafariMode;
 }
 
-const BASE_WIDTH = 1203
-const BASE_HEIGHT = 753
+const BASE_WIDTH = 1203;
+const BASE_HEIGHT = 753;
 
 export function Safari({
   imageSrc,
@@ -22,7 +22,7 @@ export function Safari({
   url,
   width = 1203,
   height = 753,
-  mode = "default",
+  mode = 'default',
   ...props
 }: SafariProps) {
   return (
@@ -63,11 +63,17 @@ export function Safari({
           />
         </g>
         <g className="mix-blend-luminosity">
-          <text fill="#A3A3A3" fontFamily="Arial, sans-serif" fontSize="12" x="580" y="30">
+          <text
+            fill="#A3A3A3"
+            fontFamily="Arial, sans-serif"
+            fontSize="12"
+            x="580"
+            y="30"
+          >
             {url}
           </text>
         </g>
-        {mode === "default" ? (
+        {mode === 'default' ? (
           <>
             <g className="mix-blend-luminosity">
               <path
@@ -171,5 +177,5 @@ export function Safari({
         </clipPath>
       </defs>
     </svg>
-  )
+  );
 }

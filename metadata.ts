@@ -1,7 +1,4 @@
-import {
-  defineCollection,
-  defineConfig,
-} from '@content-collections/core';
+import { defineCollection, defineConfig } from '@content-collections/core';
 import readingTime from 'reading-time';
 import { z } from 'zod';
 
@@ -19,9 +16,9 @@ const Writing = defineCollection({
   transform: async (doc) => {
     const slug = doc._meta.fileName.replace(/\.mdx$/, '');
     const bodyRaw = doc.content;
-    
+
     const readingTimeResult = readingTime(bodyRaw);
-    
+
     return {
       ...doc,
       slug,
@@ -60,4 +57,3 @@ const config = defineConfig({
 });
 
 export default config;
-

@@ -9,7 +9,7 @@
 
 @layer base {
   html {
-    @apply max-h-screen antialiased text-[13px] sm:text-sm;
+    @apply max-h-screen text-[13px] antialiased sm:text-sm;
     font-family: var(--font-body);
   }
 
@@ -25,21 +25,21 @@
 
   h1 {
     font-family: var(--font-display);
-    @apply text-base sm:text-lg font-bold tracking-tight text-primary;
+    @apply text-base font-bold tracking-tight text-primary sm:text-lg;
   }
 
   h2 {
     font-family: var(--font-display);
-    @apply text-sm sm:text-base font-semibold tracking-tight text-primary;
+    @apply text-sm font-semibold tracking-tight text-primary sm:text-base;
   }
 
   h3 {
     font-family: var(--font-display);
-    @apply text-[13px] sm:text-sm font-semibold tracking-tight text-primary;
+    @apply text-[13px] font-semibold tracking-tight text-primary sm:text-sm;
   }
 
   p {
-    @apply leading-relaxed text-[13px] sm:text-sm;
+    @apply text-[13px] leading-relaxed sm:text-sm;
   }
 
   a {
@@ -132,7 +132,7 @@
 
   .link-hover::after {
     content: '';
-    @apply absolute bottom-0 left-0 w-0 h-[1px] bg-current transition-all duration-200;
+    @apply absolute bottom-0 left-0 h-[1px] w-0 bg-current transition-all duration-200;
   }
 
   .link-hover:hover::after {
@@ -199,6 +199,6 @@
   display: grid;
   grid-template-columns: 20% 20% 20% 20%;
   grid-template-rows: masonry;
-  align-tracks: start; 
+  align-tracks: start;
   justify-tracks: start;
 }
