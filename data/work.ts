@@ -9,6 +9,7 @@ export type WorkCardType = {
   content?: string; // Detailed description for modal
   tags?: string[]; // Tech stack or keywords
   role?: string; // Your role in the project
+  device?: 'safari' | 'iphone';
 };
 
 export const works: WorkCardType[] = [
@@ -65,6 +66,18 @@ export const works: WorkCardType[] = [
     role: "Full Stack Developer",
     content: "Developed a comprehensive pet care platform connecting pet owners with veterinary services and pet care solutions. Built scalable web applications with modern technologies.",
     tags: ["React", "TypeScript", "Node.js", "Full Stack"],
+  },
+  {
+    title: "Pettoo App",
+    img: "/static/images/work/pettoo.webp",
+    url: "pettoo.de",
+    href: [ "https://pettoo.de" ],
+    company: "Pettoo UG",
+    h: "h-72",
+    role: "Full Stack Developer",
+    content: "Developed a comprehensive pet care platform connecting pet owners with veterinary services and pet care solutions. Built scalable web applications with modern technologies.",
+    tags: ["React", "TypeScript", "Node.js", "Full Stack"],
+    device: "iphone",
   },
   {
     title: "Discourse Analysis Tool Suite",

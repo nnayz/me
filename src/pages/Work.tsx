@@ -9,6 +9,8 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/className';
 import { FaExternalLinkAlt, FaGithub } from 'react-icons/fa';
 import { Safari } from '@/components/ui/safari';
+import Iphone from '@/components/ui/iphone';
+import { Android } from '@/components/ui/android';
 
 const stagger = {
   animate: {
@@ -57,8 +59,19 @@ function WorkCard({ work, index }: { work: WorkCardType; index: number }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
-      {/* Image in Safari frame */}
-      {work.img && (
+      {/* Image in device frame */}
+      {work.img && work.device === 'iphone' ? (
+        <div className="flex justify-center gap-6">
+          <Iphone
+            src={work.img}
+            className="h-[500px] w-auto rounded-md shadow-sm"
+          />
+          <Android
+            src={work.img}
+            className="h-[500px] w-auto rounded-md shadow-sm"
+          />
+        </div>
+      ) : work.img && (
         <div className="relative w-full">
           <Safari
             url={work.url}
