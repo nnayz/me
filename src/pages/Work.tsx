@@ -8,6 +8,7 @@ import { works, WorkCardType } from '@data/work';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/className';
 import { FaExternalLinkAlt, FaGithub } from 'react-icons/fa';
+import { Safari } from '@/components/ui/safari';
 
 const stagger = {
   animate: {
@@ -25,7 +26,7 @@ const fadeInUp = {
 export default function Work() {
   return (
     <motion.div
-      className="mx-auto flex max-w-2xl flex-col gap-16 px-6"
+      className="mx-auto flex max-w-5xl flex-col gap-16 px-6"
       variants={stagger}
       initial="initial"
       animate="animate"
@@ -56,14 +57,14 @@ function WorkCard({ work, index }: { work: WorkCardType; index: number }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
     >
-      {/* Image */}
+      {/* Image in Safari frame */}
       {work.img && (
-        <div className="relative w-full aspect-[16/9] overflow-hidden rounded-md">
-          <img
-            src={work.img}
-            alt={work.title}
-            loading="lazy"
-            className="w-full h-full object-cover"
+        <div className="relative w-full">
+          <Safari
+            url={work.url}
+            imageSrc={work.img}
+            className="w-full h-auto rounded-md shadow-sm"
+            mode="default"
           />
         </div>
       )}

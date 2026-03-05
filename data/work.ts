@@ -4,6 +4,7 @@ export type WorkCardType = {
   href?: string[];
   company?: string;
   img?: string;
+  url?: string; // Domain shown in Safari address bar
   h?: string;
   content?: string; // Detailed description for modal
   tags?: string[]; // Tech stack or keywords
@@ -14,6 +15,7 @@ export const works: WorkCardType[] = [
   {
     title: "SynTwin AI",
     img: "/static/images/work/syntwin.webp",
+    url: "syntwin.ai",
     href: [ "https://syntwin.ai" ],
     company: "SynTwin GmbH",
     h: "h-96",
@@ -56,6 +58,7 @@ export const works: WorkCardType[] = [
   {
     title: "Pettoo",
     img: "/static/images/work/pettoo.webp",
+    url: "pettoo.de",
     href: [ "https://pettoo.de" ],
     company: "Pettoo UG",
     h: "h-72",
@@ -66,6 +69,7 @@ export const works: WorkCardType[] = [
   {
     title: "Discourse Analysis Tool Suite",
     img: "/static/images/work/dats.webp",
+    url: "dats.ltdemos.informatik.uni-hamburg.de",
     href: [ "https://dats.ltdemos.informatik.uni-hamburg.de" ],
     company: "University of Hamburg",
     h: "h-72",
