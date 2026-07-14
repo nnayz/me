@@ -1,28 +1,32 @@
-"use client"
+'use client';
 
-import type { SVGProps } from "react"
+import type { SVGProps } from 'react';
 
-type SafariMode = "default" | "simple"
+type SafariMode = 'default' | 'simple';
 
 export interface SafariProps extends SVGProps<SVGSVGElement> {
-  url?: string
-  imageSrc?: string
-  videoSrc?: string
-  width?: number
-  height?: number
-  mode?: SafariMode
+  url?: string;
+  imageSrc?: string;
+  iframeSrc?: string;
+  iframeTitle?: string;
+  videoSrc?: string;
+  width?: number;
+  height?: number;
+  mode?: SafariMode;
 }
 
-const BASE_WIDTH = 1203
-const BASE_HEIGHT = 753
+const BASE_WIDTH = 1203;
+const BASE_HEIGHT = 753;
 
 export function Safari({
+  iframeSrc,
+  iframeTitle,
   imageSrc,
   videoSrc,
   url,
   width = 1203,
   height = 753,
-  mode = "default",
+  mode = 'default',
   ...props
 }: SafariProps) {
   return (
@@ -63,11 +67,17 @@ export function Safari({
           />
         </g>
         <g className="mix-blend-luminosity">
-          <text fill="#A3A3A3" fontFamily="Arial, sans-serif" fontSize="12" x="580" y="30">
+          <text
+            fill="#A3A3A3"
+            fontFamily="Arial, sans-serif"
+            fontSize="12"
+            x="580"
+            y="30"
+          >
             {url}
           </text>
         </g>
-        {mode === "default" ? (
+        {mode === 'default' ? (
           <>
             <g className="mix-blend-luminosity">
               <path
@@ -119,7 +129,29 @@ export function Safari({
             </g>
           </>
         ) : null}
-        {imageSrc ? (
+        {iframeSrc ? (
+          <foreignObject
+            clipPath="url(#roundedBottom)"
+            height={BASE_HEIGHT - 52}
+            width={BASE_WIDTH - 2}
+            x="1"
+            y="52"
+          >
+            <div className="h-full w-full overflow-auto">
+              <iframe
+                className="h-full w-full border-0 bg-white"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                sandbox="allow-forms allow-popups allow-same-origin allow-scripts"
+                scrolling="yes"
+                src={iframeSrc}
+                style={{ overflow: 'auto', pointerEvents: 'auto' }}
+                tabIndex={0}
+                title={iframeTitle ?? url ?? 'Website preview'}
+              />
+            </div>
+          </foreignObject>
+        ) : imageSrc ? (
           <image
             clipPath="url(#roundedBottom)"
             height={BASE_HEIGHT - 52}
@@ -139,7 +171,7 @@ export function Safari({
             y="52"
           />
         )}
-        {videoSrc && (
+        {!iframeSrc && videoSrc && (
           <foreignObject
             clipPath="url(#roundedBottom)"
             height={BASE_HEIGHT - 52}
@@ -171,5 +203,5 @@ export function Safari({
         </clipPath>
       </defs>
     </svg>
-  )
+  );
 }

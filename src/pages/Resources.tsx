@@ -41,20 +41,19 @@ function Item({
       rel="noopener noreferrer"
       target="_blank"
     >
-      <div className="h-8 w-8 flex-shrink-0">
+      <div className="h-8 w-8 shrink-0">
         <img
           alt={`${title} favicon`}
           className="h-full w-full rounded-md bg-gray-500/20 object-contain px-0.5 py-0.5"
           src={faviconUrl}
         />
       </div>{' '}
-      <div className="ml-2 flex flex-grow flex-col">
-        <span className="text-secondary mr-2 flex-grow truncate">
+      <div className="ml-2 flex grow flex-col">
+        <span className="text-secondary mr-2 grow truncate">
           {title} ¬
         </span>
-        <span className="text-tertiary flex-shrink">{description}</span>
+        <span className="text-tertiary shrink">{description}</span>
       </div>
     </a>
   );
 }
-

@@ -112,10 +112,10 @@ export default function Writing() {
                 )}
                 to={`/writing/${post.slug}`}
               >
-                <span className="text-secondary mr-2 flex-grow truncate group-hover:text-primary transition-colors text-sm">
+                <span className="text-secondary mr-2 grow truncate group-hover:text-primary transition-colors text-sm">
                   {post.title}
                 </span>
-                <span className="text-quaternary flex-shrink-0 text-xs tabular-nums">
+                <span className="text-quaternary shrink-0 text-xs tabular-nums">
                   <DateViewer date={post.publishedAt} />
                 </span>
               </Link>

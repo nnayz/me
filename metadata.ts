@@ -56,8 +56,7 @@ const Writing = defineCollection({
 });
 
 const config = defineConfig({
-  collections: [Writing],
+  content: [Writing],
 });
 
 export default config;
-

@@ -1,3 +1,5 @@
+@reference "./globals.css";
+
 .prose .anchor {
   @apply invisible absolute no-underline;
 
@@ -17,8 +19,12 @@
 }
 
 .prose .anchor:after {
-  @apply text-neutral-300 dark:text-neutral-700;
+  @apply text-neutral-300;
   content: '#';
+}
+
+.dark .prose .anchor:after {
+  @apply text-neutral-700;
 }
 
 .prose *:hover > .anchor {
@@ -105,13 +111,13 @@ table {
   color: gray;
 }
 [data-rehype-pretty-code-fragment] .line--highlighted {
-  @apply bg-slate-500 bg-opacity-10;
+  @apply bg-slate-500/10;
 }
 [data-rehype-pretty-code-fragment] .line-highlighted span {
   @apply relative;
 }
 [data-rehype-pretty-code-fragment] .word--highlighted {
-  @apply rounded-md bg-slate-500 bg-opacity-10 p-1;
+  @apply rounded-md bg-slate-500/10 p-1;
 }
 [data-rehype-pretty-code-title] {
   @apply rounded-t-lg border border-[#333333] bg-[#1c1c1c] px-4 py-3 font-mono text-xs font-medium text-neutral-200;

@@ -1,17 +1,69 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from 'next-themes';
 import { Analytics } from '@vercel/analytics/react';
 import { cn } from '@/lib/className';
-import AnimateEnter from '@components/AnimateEnter';
-import Navbar from '@components/Navbar';
+import { EASE_EXPO } from '@/lib/motion';
+import AudioToggle from '@components/AudioToggle';
 import Background from '@components/Background';
-import Footer from '@components/Footer';
+import CursorTrail from '@components/CursorTrail';
+import MenuOverlay from '@components/MenuOverlay';
+import Navbar from '@components/Navbar';
+import ShowreelBadge from '@components/ShowreelBadge';
+import SoundGate from '@components/SoundGate';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { ThemeProvider } from 'next-themes';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+import Resources from './pages/Resources';
+import Work from './pages/Work';
 import Writing from './pages/Writing';
 import WritingPost from './pages/WritingPost';
-import Work from './pages/Work';
-import Resources from './pages/Resources';
-import NotFound from './pages/NotFound';
+
+function AppInner() {
+  const location = useLocation();
+  const reduce = useReducedMotion();
+
+  return (
+    <div className="relative min-h-screen">
+      <Background />
+      <CursorTrail />
+      <SoundGate />
+      <Navbar />
+      <MenuOverlay />
+
+      <main
+        className={cn(
+          'relative z-10 flex min-h-screen w-full flex-col justify-center',
+          'pointer-events-none py-24 font-sans antialiased sm:py-28',
+          '[&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_input]:pointer-events-auto [&_nav]:pointer-events-auto',
+          '[&_canvas]:pointer-events-auto [&_div[class*="cursor-pointer"]]:pointer-events-auto',
+        )}
+      >
+        <AnimatePresence initial={false} mode="wait">
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            className="mx-auto w-full p-4"
+            exit={{ opacity: 0, y: reduce ? 0 : -12 }}
+            initial={{ opacity: 0, y: reduce ? 0 : 16 }}
+            key={location.pathname}
+            transition={{ duration: 0.5, ease: EASE_EXPO }}
+          >
+            <Routes location={location}>
+              <Route element={<Home />} path="/" />
+              <Route element={<Writing />} path="/writing" />
+              <Route element={<WritingPost />} path="/writing/:slug" />
+              <Route element={<Work />} path="/work" />
+              <Route element={<Resources />} path="/resources" />
+              <Route element={<NotFound />} path="*" />
+            </Routes>
+          </motion.div>
+        </AnimatePresence>
+      </main>
+
+      <ShowreelBadge />
+      <AudioToggle />
+    </div>
+  );
+}
 
 function App() {
   return (
@@ -19,40 +71,10 @@ function App() {
       attribute="class"
       defaultTheme="system"
       disableTransitionOnChange
-      enableSystem={true}
+      enableSystem
     >
       <BrowserRouter>
-        <div className="relative min-h-screen">
-          {/* Noisy Background */}
-          <Background />
-          
-          {/* Top Navigation Bar */}
-          <Navbar />
-          
-          {/* Main content */}
-          <div
-            className={cn(
-              'relative z-10 w-full min-h-screen pointer-events-none',
-              'flex flex-col justify-center',
-              'py-20 sm:py-24',
-              'motion-reduce:transform-none motion-reduce:transition-none',
-              'font-sans antialiased',
-              '[&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_input]:pointer-events-auto [&_nav]:pointer-events-auto [&_div[onclick]]:pointer-events-auto [&_div[class*="cursor-pointer"]]:pointer-events-auto',
-            )}
-          >
-            <AnimateEnter>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/writing" element={<Writing />} />
-                <Route path="/writing/:slug" element={<WritingPost />} />
-                <Route path="/work" element={<Work />} />
-                <Route path="/resources" element={<Resources />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Footer />
-            </AnimateEnter>
-          </div>
-        </div>
+        <AppInner />
       </BrowserRouter>
       <Analytics />
     </ThemeProvider>

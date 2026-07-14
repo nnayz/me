@@ -1,6 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@source inline("{h-48,h-72,h-96}");
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Syne", sans-serif;
+  --font-body: "Outfit", sans-serif;
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
 
 :root {
   --font-display: 'Syne', sans-serif;
@@ -18,9 +27,12 @@
   }
 
   body {
-    @apply m-0 p-0;
+    @apply m-0 p-0 bg-stone-50;
     font-family: var(--font-body);
-    @apply bg-stone-50 dark:bg-neutral-950;
+  }
+
+  .dark body {
+    @apply bg-neutral-950;
   }
 
   h1 {
@@ -56,7 +68,11 @@
   }
 
   ::selection {
-    @apply bg-black/10 dark:bg-white/20;
+    background-color: rgb(0 0 0 / 10%);
+  }
+
+  .dark ::selection {
+    background-color: rgb(255 255 255 / 20%);
   }
 
   .capsize::before {
@@ -71,6 +87,10 @@
     display: table;
   }
   :root {
+    --text-primary: rgb(0 0 0);
+    --text-secondary: rgb(0 0 0 / 80%);
+    --text-tertiary: rgb(0 0 0 / 60%);
+    --text-quaternary: rgb(0 0 0 / 40%);
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -98,6 +118,10 @@
     --radius: 0.5rem;
   }
   .dark {
+    --text-primary: rgb(255 255 255);
+    --text-secondary: rgb(255 255 255 / 80%);
+    --text-tertiary: rgb(255 255 255 / 60%);
+    --text-quaternary: rgb(255 255 255 / 40%);
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
@@ -141,22 +165,6 @@
 }
 
 @layer utilities {
-  .text-primary {
-    @apply text-black dark:text-white;
-  }
-
-  .text-secondary {
-    @apply text-black/80 dark:text-white/80;
-  }
-
-  .text-tertiary {
-    @apply text-black/60 dark:text-white/60;
-  }
-
-  .text-quaternary {
-    @apply text-black/40 dark:text-white/40;
-  }
-
   .flip-card {
     background-color: transparent;
     perspective: 1000px;
@@ -195,10 +203,52 @@
   }
 }
 
+@utility text-primary {
+  color: var(--text-primary);
+}
+
+@utility text-secondary {
+  color: var(--text-secondary);
+}
+
+@utility text-tertiary {
+  color: var(--text-tertiary);
+}
+
+@utility text-quaternary {
+  color: var(--text-quaternary);
+}
+
 .container {
   display: grid;
   grid-template-columns: 20% 20% 20% 20%;
   grid-template-rows: masonry;
-  align-tracks: start; 
+  align-tracks: start;
   justify-tracks: start;
+}
+
+/* Faint background "stage" — grid suggests space, fades toward the edges.
+   Monochrome by design: the work provides the colour. */
+.stage-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 62% at 50% 42%, #000 0%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 62% at 50% 42%, #000 0%, transparent 100%);
+}
+
+.dark .stage-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-grid {
+    display: none;
+  }
 }

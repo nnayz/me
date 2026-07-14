@@ -180,11 +180,6 @@ function Contact() {
           website="GitHub"
         />
         <ContactLink
-          href={["https://www.instagram.com/nnasrrul/", "https://www.instagram.com/nasrultakesphotos/"]}
-          title={["@nnasrrul", "@nasrultakesphotos"]}
-          website="Instagram"
-        />
-        <ContactLink
           href="https://x.com/nnasrrull"
           title="@nnasrrull"
           website="X"
@@ -227,10 +222,10 @@ function RecentWritings() {
               to={`/writing/${post.slug}`}
               key={post.slug}
             >
-              <span className="text-secondary mr-2 flex-grow truncate group-hover:text-primary transition-colors text-sm">
+              <span className="text-secondary mr-2 grow truncate group-hover:text-primary transition-colors text-sm">
                 {post.title}
               </span>
-              <span className="text-quaternary flex-shrink-0 text-xs tabular-nums">
+              <span className="text-quaternary shrink-0 text-xs tabular-nums">
                 <DateViewer date={post.publishedAt} />
               </span>
             </Link>

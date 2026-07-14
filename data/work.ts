@@ -1,80 +1,66 @@
 export type WorkCardType = {
   title: string;
-  authors?: string[];
+  summary: string; // One plain-English line. No jargon.
   href?: string[];
-  company?: string;
+  company?: string; // Real org name only — never a category label.
   img?: string;
-  url?: string; // Domain shown in Safari address bar
+  url?: string; // Domain shown in the Safari address bar
   h?: string;
-  content?: string; // Detailed description for modal
-  tags?: string[]; // Tech stack or keywords
-  role?: string; // Your role in the project
 };
 
 export const works: WorkCardType[] = [
   {
-    title: "SynTwin AI",
+    title: "SynTwin",
+    summary: "The platform and AI agents that bring digital twins to life.",
+    company: "SynTwin GmbH",
     img: "/static/images/work/syntwin.webp",
     url: "syntwin.ai",
-    href: [ "https://syntwin.ai" ],
-    company: "SynTwin GmbH",
+    href: ["https://syntwin.ai"],
     h: "h-96",
-    role: "AI Engineer",
-    content: "Working on a platform that brings Digital Twins to life, developing agentic workflows that push the boundaries of interaction. Building AI-powered systems that enable intelligent automation and decision-making in digital twin environments.",
-    tags: ["AI", "Digital Twins", "Agentic Workflows", "Python", "Machine Learning"],
-  },
-  {
-    title: "Few shot meta learning classification of bioacoustic sounds using prototypical networks",
-    href: [ "https://github.com/nnayz/uhh_project_dsai" ],
-    company: "DSAI Project",
-    h: "h-48",
-    content: "Developed a prototypical networks-based meta-learning framework for few-shot bioacoustics classification as part of the DCASE Challenge. Achieved efficient sound classification with minimal labeled data, advancing practical applications in environmental monitoring and wildlife research.",
-    tags: [ "Deep Learning", "Signal Processing", "Python", "Meta Learning" ]
-  },
-  {
-    title: "Federated fine-tuning of nicheformer on spatial transcriptomics data",
-    href: [ "https://github.com/nnayz/ft-nicheformer" ],
-    company: "Personal Project",
-    h: "h-48",
-    content: "Developed a federated learning framework for fine-tuning Nicheformers, enabling distributed model training across spatial transcriptomics data without centralizing sensitive datasets. Implemented zero-shot application techniques to apply pre-trained models to novel biological domains, advancing privacy-preserving approaches in computational biology and genomics research.",
-    tags: [ "Python", "Machine Learning", "Federated Learning", "Nicheformer", "Bioinformatics" ]
-  },
-  {
-    title: "ACL Anthology RAG",
-    href: [ "https://github.com/nnayz/acl-anthology-rag", "https://acla.nasrul.info" ],
-    company: "Personal Project",
-    h: "h-48",
-    content: "Built a retrieval-augmented generation (RAG) system for the ACL Anthology that leverages semantic dense vector embeddings to provide intelligent research paper recommendations. Implemented a full-stack solution combining Python FastAPI backend services with a TypeScript frontend, enabling researchers to discover relevant papers through similarity-based semantic search rather than traditional keyword matching.",
-    tags: [ "Python", "Machine Learning", "ACL Anthology", "RAG", "FastAPI", "TypeScript", "Semantic Search" ]
-  },
-  {
-    title: "MyTorch",
-    href: [ "https://github.com/nnayz/mytorch" ],
-    h: "h-96",
-    role: "Personal Project",
-    content: "A personal deep learning framework built from scratch to understand the fundamentals of neural networks and automatic differentiation. Educational project exploring the inner workings of frameworks like PyTorch.",
-    tags: ["Deep Learning", "Python", "Neural Networks", "Education"],
   },
   {
     title: "Pettoo",
+    summary: "A care platform that connects pet owners with the services they need.",
+    company: "Pettoo UG",
     img: "/static/images/work/pettoo.webp",
     url: "pettoo.de",
-    href: [ "https://pettoo.de" ],
-    company: "Pettoo UG",
+    href: ["https://pettoo.de"],
     h: "h-72",
-    role: "Full Stack Developer",
-    content: "Developed a comprehensive pet care platform connecting pet owners with veterinary services and pet care solutions. Built scalable web applications with modern technologies.",
-    tags: ["React", "TypeScript", "Node.js", "Full Stack"],
   },
   {
     title: "Discourse Analysis Tool Suite",
+    summary: "Tools that help researchers explore and make sense of large text collections.",
+    company: "University of Hamburg",
     img: "/static/images/work/dats.webp",
     url: "dats.ltdemos.informatik.uni-hamburg.de",
-    href: [ "https://dats.ltdemos.informatik.uni-hamburg.de" ],
-    company: "University of Hamburg",
+    href: ["https://dats.ltdemos.informatik.uni-hamburg.de"],
     h: "h-72",
-    role: "Research Developer",
-    content: "Data Analytics and Transformation System - a research project focused on developing tools and methodologies for data analysis and transformation in academic research contexts.",
-    tags: ["Data Science", "Research", "Analytics", "Python"],
-  }
+  },
+  {
+    title: "ACL Anthology Search",
+    summary: "Find research papers by what they mean, not the keywords they happen to use.",
+    url: "acla.nasrul.info",
+    href: ["https://acla.nasrul.info", "https://github.com/nnayz/acl-anthology-rag"],
+    h: "h-72",
+  },
+  {
+    title: "MyTorch",
+    summary: "A tiny deep-learning framework built from scratch to see how PyTorch really works.",
+    img: "/static/images/work/mytorch.webp",
+    url: "github.com/nnayz/mytorch",
+    href: ["https://github.com/nnayz/mytorch"],
+    h: "h-96",
+  },
+  {
+    title: "Bioacoustic Sound Classification",
+    summary: "Teaching a model to recognise animal calls from only a handful of examples.",
+    href: ["https://github.com/nnayz/uhh_project_dsai"],
+    h: "h-48",
+  },
+  {
+    title: "Federated Nicheformer",
+    summary: "Training a genomics model across many datasets without ever moving the data.",
+    href: ["https://github.com/nnayz/ft-nicheformer"],
+    h: "h-48",
+  },
 ];
