@@ -24,7 +24,7 @@ export default function Work() {
         <h1 className="text-primary text-3xl font-bold tracking-tight sm:text-4xl">
           Highlights
         </h1>
-        <p className="text-tertiary mt-2 max-w-md text-sm">
+        <p className="text-tertiary mt-2 max-w-md text-base">
           A handful of things I have built — at work, at university, and for the
           fun of it.
         </p>
@@ -78,7 +78,7 @@ function ProjectCard({
           <h2 className="text-primary text-lg font-semibold tracking-tight">
             {work.title}
           </h2>
-          <p className="text-secondary mt-1.5 max-w-md text-sm leading-relaxed">
+          <p className="text-secondary mt-1.5 max-w-md text-base leading-relaxed">
             {work.summary}
           </p>
           {meta && (
@@ -106,7 +106,7 @@ function RepositoryPreview({ work }: { work: WorkCardType }) {
       <span className="text-quaternary font-mono text-[11px] tracking-wide">
         {work.url ?? getLinkLabel(work.href?.[0] ?? '')}
       </span>
-      <p className="text-tertiary max-w-md font-mono text-sm leading-relaxed">
+      <p className="text-tertiary max-w-md font-mono text-base leading-relaxed">
         {work.summary}
       </p>
     </div>

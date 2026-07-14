@@ -1,11 +1,19 @@
 /**
- * Full-screen navigation. Opens as a masked panel; links stagger in with a
- * split-text-style rise. Primary nav lives here (the chrome stays quiet).
+ * Navigation card. It is the navbar's menu pill, morphed: the pill and this
+ * card share a layoutId, so clicking the pill grows it into the card and
+ * closing shrinks it back. Links stagger in once the surface has settled.
  */
 import { play } from '@/lib/audio';
-import { EASE_EXPO, EASE_INOUT } from '@/lib/motion';
+import {
+  EASE_EXPO,
+  EASE_INOUT,
+  EASE_QUART,
+  MENU_MORPH,
+  MENU_SURFACE,
+} from '@/lib/motion';
 import { store, useStore } from '@/lib/store';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Github, Linkedin, Mail, Twitter, X } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -16,11 +24,17 @@ const pages = [
   { label: 'resources', to: '/resources' },
 ];
 
+const EMAIL = 'nasrul.huda.ds@gmail.com';
+
 const socials = [
-  { href: 'https://github.com/nnayz', label: 'github' },
-  { href: 'https://www.linkedin.com/in/nasrul-hudaa/', label: 'linkedin' },
-  { href: 'https://x.com/nnasrrull', label: 'x' },
-  { href: 'mailto:nasrul.huda.ds@gmail.com', label: 'email' },
+  { href: 'https://github.com/nnayz', icon: Github, label: 'github' },
+  {
+    href: 'https://www.linkedin.com/in/nasrul-hudaa/',
+    icon: Linkedin,
+    label: 'linkedin',
+  },
+  { href: 'https://x.com/nnasrrull', icon: Twitter, label: 'x' },
+  { href: `mailto:${EMAIL}`, icon: Mail, label: 'email' },
 ];
 
 export default function MenuOverlay() {
@@ -33,82 +47,145 @@ export default function MenuOverlay() {
   }, [location.pathname]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && store.setMenu(false);
+    const onKey = (e: KeyboardEvent) =>
+      e.key === 'Escape' && store.setMenu(false);
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-          className="pointer-events-auto fixed inset-0 z-[60] flex flex-col justify-center bg-neutral-950 px-8 text-neutral-50 sm:px-16 md:px-24"
-          exit={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-          initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-          transition={{ duration: 0.7, ease: EASE_INOUT }}
-        >
-          <nav aria-label="Primary" className="flex flex-col gap-1">
-            {pages.map((p, i) => {
-              const active = isActive(location.pathname, p.to);
-              return (
-                <div className="overflow-hidden" key={p.to}>
-                  <motion.div
-                    animate={{ y: 0 }}
-                    initial={{ y: '110%' }}
-                    transition={{
-                      delay: 0.15 + i * 0.05,
-                      duration: 0.8,
-                      ease: EASE_EXPO,
-                    }}
-                  >
-                    <Link
-                      className="group flex items-baseline gap-4 py-1 [font-family:var(--font-display)]"
-                      onMouseEnter={() => play('hover')}
-                      to={p.to}
-                    >
-                      <span
-                        className="font-bold tracking-[-0.04em] transition-opacity"
-                        style={{
-                          fontSize: 'clamp(2.5rem, 9vw, 6rem)',
-                          lineHeight: 0.98,
-                          opacity: active ? 1 : 0.55,
-                        }}
-                      >
-                        {p.label}
-                      </span>
-                      {active && (
-                        <span className="h-2 w-2 shrink-0 rounded-full bg-white" />
-                      )}
-                    </Link>
-                  </motion.div>
-                </div>
-              );
-            })}
-          </nav>
-
-          <motion.div
+    <>
+      {/* Only the dim needs AnimatePresence — the card's exit *is* the morph
+          back into the pill, which happens because the pill remounts. */}
+      <AnimatePresence>
+        {open && (
+          <motion.button
             animate={{ opacity: 1 }}
-            className="mt-14 flex flex-wrap gap-x-6 gap-y-2 font-mono text-xs lowercase"
+            aria-label="Close menu"
+            className="pointer-events-auto fixed inset-0 z-[75] cursor-default bg-black/30"
+            exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
-            transition={{ delay: 0.45, duration: 0.5 }}
+            onClick={() => store.setMenu(false)}
+            transition={{ duration: 0.5, ease: EASE_QUART }}
+            type="button"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* The other half of the morph: this card *is* the navbar's menu pill,
+          grown. Framer animates it out of the pill's box because they share
+          MENU_SURFACE — and on close it crossfades back down into it. */}
+      <AnimatePresence>
+        {open && (
+          <motion.nav
+            aria-label="Primary"
+            className="pointer-events-auto fixed inset-y-2 right-2 z-[80] flex w-[calc(100%-1rem)] flex-col overflow-hidden bg-neutral-50 p-8 text-neutral-950 shadow-2xl ring-1 ring-black/5 sm:inset-y-3 sm:right-3 sm:w-[min(36rem,calc(100%-1.5rem))] sm:p-10"
+            exit={{
+              opacity: 0,
+              transition: { duration: 0.4, ease: EASE_INOUT },
+            }}
+            layoutId={MENU_SURFACE}
+            style={{ borderRadius: 24 }}
+            transition={MENU_MORPH}
           >
-            {socials.map((s) => (
-              <a
-                className="text-white/50 transition-colors hover:text-white"
-                href={s.href}
-                key={s.label}
+            {/* The pill is dark in light mode; hold its colour for a beat so the
+                surface doesn't flip white the instant it starts growing. */}
+            <motion.span
+              animate={{ opacity: 0 }}
+              className="pointer-events-none absolute inset-0 bg-neutral-950 dark:hidden"
+              initial={{ opacity: 1 }}
+              transition={{ duration: 0.4, ease: EASE_INOUT }}
+            />
+
+            <motion.div
+              animate={{ opacity: 1 }}
+              className="relative flex justify-end"
+              initial={{ opacity: 0 }}
+              transition={{ delay: 0.35, duration: 0.4 }}
+            >
+              <button
+                className="group flex items-center gap-2 rounded-full bg-[#1EFFB8] py-1 pr-1 pl-4 text-black lowercase"
+                onClick={() => {
+                  play('open');
+                  store.setMenu(false);
+                }}
                 onMouseEnter={() => play('hover')}
-                rel="noopener noreferrer"
-                target="_blank"
+                type="button"
               >
-                {s.label} ↗
-              </a>
-            ))}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+                <span className="[font-family:var(--font-body)] text-base font-bold tracking-[-0.02em] text-black">
+                  close
+                </span>
+                <span className="flex h-8 w-8 items-center justify-center rounded-full text-black transition-transform duration-300 group-hover:rotate-90">
+                  <X className="h-4 w-4" strokeWidth={2.5} />
+                </span>
+              </button>
+            </motion.div>
+
+            <div className="relative flex flex-1 flex-col justify-center gap-1">
+              {pages.map((p, i) => {
+                const active = isActive(location.pathname, p.to);
+                return (
+                  <div className="overflow-hidden" key={p.to}>
+                    <motion.div
+                      animate={{ y: 0 }}
+                      initial={{ y: '110%' }}
+                      transition={{
+                        delay: 0.4 + i * 0.07,
+                        duration: 0.9,
+                        ease: EASE_EXPO,
+                      }}
+                    >
+                      <Link
+                        className="group flex items-baseline gap-4 [font-family:var(--font-display)]"
+                        onMouseEnter={() => play('hover')}
+                        to={p.to}
+                      >
+                        <span
+                          className="font-bold tracking-[-0.04em] opacity-35 transition-opacity group-hover:opacity-100 data-[active]:opacity-100"
+                          data-active={active || undefined}
+                          style={{
+                            fontSize: 'clamp(2.25rem, 7vw, 4.5rem)',
+                            lineHeight: 1.05,
+                          }}
+                        >
+                          {p.label}
+                        </span>
+                        {active && (
+                          <span className="h-2 w-2 shrink-0 rounded-full bg-neutral-950" />
+                        )}
+                      </Link>
+                    </motion.div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <motion.div
+              animate={{ opacity: 1 }}
+              className="relative"
+              initial={{ opacity: 0 }}
+              transition={{ delay: 0.55, duration: 0.5 }}
+            >
+              <div className="flex gap-3">
+                {socials.map((s) => (
+                  <a
+                    aria-label={s.label}
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-neutral-950 text-neutral-50 transition-transform duration-300 hover:-translate-y-1"
+                    href={s.href}
+                    key={s.label}
+                    onMouseEnter={() => play('hover')}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <s.icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 

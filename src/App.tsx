@@ -6,7 +6,6 @@ import Background from '@components/Background';
 import CursorTrail from '@components/CursorTrail';
 import MenuOverlay from '@components/MenuOverlay';
 import Navbar from '@components/Navbar';
-import ShowreelBadge from '@components/ShowreelBadge';
 import SoundGate from '@components/SoundGate';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ThemeProvider } from 'next-themes';
@@ -59,7 +58,6 @@ function AppInner() {
         </AnimatePresence>
       </main>
 
-      <ShowreelBadge />
       <AudioToggle />
     </div>
   );

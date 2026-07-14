@@ -66,7 +66,7 @@ function EmptyState() {
           />
         </svg>
       </div>
-      <p className="text-secondary mb-1 text-sm font-medium">No posts yet</p>
+      <p className="text-secondary mb-1 text-base font-medium">No posts yet</p>
       <p className="text-tertiary max-w-xs text-xs">
         Writing is coming soon. Check back later for thoughts, ideas, and updates.
       </p>
@@ -85,7 +85,7 @@ export default function Writing() {
     >
       <motion.div variants={fadeInUp} className="space-y-2">
         <h1>Writing</h1>
-        <p className="text-tertiary text-sm">
+        <p className="text-tertiary text-base">
           If you&apos;re interested in exploring the articles that inspire me and
           shape my thinking, check out{' '}
           <Link className="underline decoration-black/30 dark:decoration-white/30 underline-offset-2 hover:decoration-black dark:hover:decoration-white transition-colors" to={'/resources'}>
@@ -112,7 +112,7 @@ export default function Writing() {
                 )}
                 to={`/writing/${post.slug}`}
               >
-                <span className="text-secondary mr-2 grow truncate group-hover:text-primary transition-colors text-sm">
+                <span className="text-secondary mr-2 grow truncate text-base transition-colors group-hover:text-primary">
                   {post.title}
                 </span>
                 <span className="text-quaternary shrink-0 text-xs tabular-nums">

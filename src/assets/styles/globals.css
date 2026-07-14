@@ -18,7 +18,7 @@
 
 @layer base {
   html {
-    @apply max-h-screen antialiased text-[13px] sm:text-sm;
+    @apply max-h-screen text-sm antialiased sm:text-base;
     font-family: var(--font-body);
   }
 
@@ -51,7 +51,7 @@
   }
 
   p {
-    @apply leading-relaxed text-[13px] sm:text-sm;
+    @apply text-sm leading-relaxed sm:text-base;
   }
 
   a {
@@ -236,7 +236,7 @@
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-  background-size: 46px 46px;
+  background-size: 24px 24px;
   -webkit-mask-image: radial-gradient(ellipse 80% 62% at 50% 42%, #000 0%, transparent 100%);
   mask-image: radial-gradient(ellipse 80% 62% at 50% 42%, #000 0%, transparent 100%);
 }

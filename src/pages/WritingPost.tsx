@@ -66,11 +66,10 @@ export default function WritingPost() {
         </Suspense>
       </article>
       <div className="mt-8">
-        <ExternalLink className="text-sm" href={editUrl(post.slug)}>
+        <ExternalLink className="text-base" href={editUrl(post.slug)}>
           Edit source on GitHub
         </ExternalLink>
       </div>
     </div>
   );
 }
-

@@ -48,7 +48,7 @@ const fadeInUp = {
 
 export default function Home() {
   return (
-    <motion.div 
+    <motion.div
       className="mx-auto flex max-w-xl flex-col gap-10 px-6"
       variants={stagger}
       initial="initial"
@@ -75,22 +75,12 @@ function AboutMe() {
   return (
     <motion.div variants={fadeInUp} className="flex flex-col gap-3">
       <p className="text-tertiary text-xs font-medium uppercase tracking-wider">About me</p>
-      <div className="text-secondary flex flex-col gap-3 text-sm">
+      <div className="text-secondary flex flex-col gap-3 text-base">
         <p>
           I enjoy building software that feels natural and dependable, where
           thoughtful engineering meets clean, purposeful design. I like
           exploring new tools, experimenting with prototypes, and understanding
           how AI and data can shape more intuitive digital experiences.
-        </p>
-        <p>
-          I am currently an AI Engineer at{' '}
-          <ExternalLink arrow={false} href="https://syntwin.ai">
-            SynTwin GmbH
-          </ExternalLink>
-          , working on the platform that brings Digital Twins to life and
-          developing agentic workflows that push the boundaries of interaction.
-          My path has taken me through research groups, startups, and full stack
-          projects across data, AI, and web engineering.
         </p>
         <p>
           I study Data Science and AI at the{' '}
@@ -132,7 +122,7 @@ function ContactLink({
         {hrefs.map((link, index) => (
           <a
             key={index}
-            className="text-secondary hover:text-primary transition-colors duration-150 flex items-center gap-1 text-sm"
+            className="text-secondary hover:text-primary flex items-center gap-1 text-base transition-colors duration-150"
             href={link}
             rel="noopener noreferrer"
             target={link.endsWith("nasrul.info") ? "_blank" : "_self"}
@@ -156,7 +146,7 @@ function ContactLink({
         ))}
       </div>
       {email && (
-        <p className="text-secondary hover:text-primary transition-colors duration-150 text-sm">
+        <p className="text-secondary hover:text-primary text-base transition-colors duration-150">
           {typeof title === 'string' ? title : title[0] ?? ''}
         </p>
       )}
@@ -185,14 +175,14 @@ function Contact() {
           website="X"
         />
         <ContactLink
-          email="nasrul.huda.ds@gmail.com"
-          title="nasrul.huda.ds@gmail.com"
+          email="hi[at]nasrul[dot]info"
+          title="hi[at]nasrul[dot]info"
           website="Email"
         />
-        <ContactLink 
-          href="https://resume.nasrul.info" 
-          title="View" 
-          website="Resume" 
+        <ContactLink
+          href="https://resume.nasrul.info"
+          title="View"
+          website="Resume"
         />
       </div>
     </motion.div>
@@ -222,7 +212,7 @@ function RecentWritings() {
               to={`/writing/${post.slug}`}
               key={post.slug}
             >
-              <span className="text-secondary mr-2 grow truncate group-hover:text-primary transition-colors text-sm">
+              <span className="text-secondary mr-2 grow truncate text-base transition-colors group-hover:text-primary">
                 {post.title}
               </span>
               <span className="text-quaternary shrink-0 text-xs tabular-nums">
