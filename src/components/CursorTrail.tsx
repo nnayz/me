@@ -11,6 +11,7 @@ import { Music2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 type Position = { x: number; y: number };
+type GridCell = { column: number; row: number };
 type TrailPoint = Position & { createdAt: number };
 type LockedNote = Position & {
   column: number;
@@ -40,7 +41,7 @@ const LOCK_PULSE_DURATION = 460;
 const LOCK_COLOR = '30,255,184';
 const HINT_DELAY = 550;
 const INTERACTIVE_SELECTOR =
-  'a, button, input, textarea, select, summary, [role="button"]';
+  'a, button, input, textarea, select, summary, [role="button"], [class*="cursor-pointer"]';
 
 // Rows form a C-major piano roll. The bottom row starts at C2 and rises through
 // the scale, keeping random clicks harmonic while retaining melodic direction.
@@ -85,6 +86,8 @@ export default function CursorTrail() {
     let hoveredHintCell = '';
     let hintTimer: number | null = null;
     let hintDismissed = false;
+    let dragging = false;
+    let lastDragCell: GridCell | null = null;
     let raf = 0;
 
     const hideHint = () => {
@@ -380,49 +383,21 @@ export default function CursorTrail() {
         requestDraw();
     };
 
-    const onMove = (event: PointerEvent) => {
-      if (event.pointerType === 'touch') return;
-
-      target = { x: event.clientX, y: event.clientY };
-      pointerInside = true;
-      scheduleHint(event);
-
-      if (!initialized) {
-        glow = { ...target };
-        lastTrailPosition = { ...target };
-        previousSoundCell = `${Math.floor(target.x / GRID_SIZE)}:${Math.floor(
-          target.y / GRID_SIZE,
-        )}`;
-        initialized = true;
-      }
-
-      requestDraw();
-    };
-
-    const onPointerOut = (event: PointerEvent) => {
-      if (event.relatedTarget) return;
-      pointerInside = false;
-      pointerLeftAt = performance.now();
-      hideHint();
-      requestDraw();
-    };
-
-    const onClick = (event: MouseEvent) => {
-      hideHint();
+    const isGridTarget = (event: PointerEvent) => {
       const appState = store.get();
-      if (
-        event.button !== 0 ||
-        appState.menuOpen ||
-        appState.sound === 'unknown'
-      )
-        return;
+      if (appState.menuOpen || appState.sound === 'unknown') return false;
 
       const targetElement =
         event.target instanceof Element ? event.target : null;
-      if (targetElement?.closest(INTERACTIVE_SELECTOR)) return;
+      return !targetElement?.closest(INTERACTIVE_SELECTOR);
+    };
 
-      const column = Math.floor(event.clientX / GRID_SIZE);
-      const row = Math.floor(event.clientY / GRID_SIZE);
+    const placeNote = (
+      { column, row }: GridCell,
+      gain: number,
+      delay = 0,
+      audible = true,
+    ) => {
       const now = performance.now();
       const detune = detuneForRow(row);
       const x = column * GRID_SIZE + GRID_SIZE / 2;
@@ -449,9 +424,115 @@ export default function CursorTrail() {
 
       startTransport(now, x);
       hasLocked = true;
+      if (audible) playGridNote(detune, { delay, gain, pan: panForX(x) });
+      requestDraw();
+    };
+
+    const paintTo = (nextCell: GridCell, gain: number) => {
+      if (!lastDragCell) {
+        placeNote(nextCell, gain);
+        lastDragCell = nextCell;
+        return;
+      }
+
+      const previousCell = lastDragCell;
+      const columnDistance = nextCell.column - previousCell.column;
+      const rowDistance = nextCell.row - previousCell.row;
+      const steps = Math.max(Math.abs(columnDistance), Math.abs(rowDistance));
+      if (steps === 0) return;
+
+      const painted = new Set<string>();
+      const soundStride = Math.max(1, Math.ceil(steps / 10));
+      for (let step = 1; step <= steps; step += 1) {
+        const progress = step / steps;
+        const cell = {
+          column: Math.round(previousCell.column + columnDistance * progress),
+          row: Math.round(previousCell.row + rowDistance * progress),
+        };
+        const key = `${cell.column}:${cell.row}`;
+        if (painted.has(key)) continue;
+        painted.add(key);
+        placeNote(
+          cell,
+          gain,
+          Math.min(step * 0.014, 0.12),
+          step % soundStride === 0 || step === steps,
+        );
+      }
+
+      lastDragCell = nextCell;
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (
+        event.pointerType === 'touch' ||
+        event.button !== 0 ||
+        !isGridTarget(event)
+      )
+        return;
+
+      dragging = true;
+      lastDragCell = null;
+      hideHint();
       retireHint();
       initAudio();
-      playGridNote(detune, { gain: 1, pan: panForX(x) });
+      paintTo(
+        {
+          column: Math.floor(event.clientX / GRID_SIZE),
+          row: Math.floor(event.clientY / GRID_SIZE),
+        },
+        1,
+      );
+    };
+
+    const onMove = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+
+      target = { x: event.clientX, y: event.clientY };
+      pointerInside = true;
+
+      if (dragging && (event.buttons & 1) === 1) {
+        if (isGridTarget(event)) {
+          paintTo(
+            {
+              column: Math.floor(event.clientX / GRID_SIZE),
+              row: Math.floor(event.clientY / GRID_SIZE),
+            },
+            0.72,
+          );
+        } else {
+          lastDragCell = null;
+        }
+        hideHint();
+      } else {
+        dragging = false;
+        lastDragCell = null;
+        scheduleHint(event);
+      }
+
+      if (!initialized) {
+        glow = { ...target };
+        lastTrailPosition = { ...target };
+        previousSoundCell = `${Math.floor(target.x / GRID_SIZE)}:${Math.floor(
+          target.y / GRID_SIZE,
+        )}`;
+        initialized = true;
+      }
+
+      requestDraw();
+    };
+
+    const endDrag = () => {
+      dragging = false;
+      lastDragCell = null;
+    };
+
+    const onPointerOut = (event: PointerEvent) => {
+      if (event.relatedTarget) return;
+      pointerInside = false;
+      pointerLeftAt = performance.now();
+      endDrag();
+      hideHint();
       requestDraw();
     };
 
@@ -471,16 +552,22 @@ export default function CursorTrail() {
     });
 
     resize();
+    window.addEventListener('pointerdown', onPointerDown);
     window.addEventListener('pointermove', onMove, { passive: true });
     window.addEventListener('pointerout', onPointerOut);
-    window.addEventListener('click', onClick);
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+    window.addEventListener('blur', endDrag);
     window.addEventListener('resize', resize);
     document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
+      window.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerout', onPointerOut);
-      window.removeEventListener('click', onClick);
+      window.removeEventListener('pointerup', endDrag);
+      window.removeEventListener('pointercancel', endDrag);
+      window.removeEventListener('blur', endDrag);
       window.removeEventListener('resize', resize);
       document.removeEventListener('visibilitychange', onVisibilityChange);
       themeObserver.disconnect();
