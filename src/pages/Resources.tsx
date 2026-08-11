@@ -1,15 +1,35 @@
 import { resources } from '@data/resources';
+import { motion } from 'framer-motion';
+
+const stagger = {
+  animate: { transition: { staggerChildren: 0.05 } },
+};
+
+const fadeInUp = {
+  animate: {
+    opacity: 1,
+    transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] },
+    y: 0,
+  },
+  initial: { opacity: 0, y: 12 },
+};
 
 export default function Resources() {
   return (
-    <div className="mx-auto max-w-2xl space-y-16">
-      <h1>Resources</h1>
-      <p className="text-secondary">
-        A curated collection of captivating articles, thought-provoking essays,
-        and enlightening videos to broaden and elevate your intellectual
-        horizons.
-      </p>
-      <div className="flex flex-col space-y-2">
+    <motion.div
+      animate="animate"
+      className="page-gutter flex w-full max-w-xl flex-col gap-8"
+      initial="initial"
+      variants={stagger}
+    >
+      <motion.header className="flex flex-col gap-2" variants={fadeInUp}>
+        <h1>Resources</h1>
+        <p className="text-tertiary text-base">
+          A curated collection of articles, essays, and videos that have shaped
+          my thinking.
+        </p>
+      </motion.header>
+      <motion.div className="space-y-0.5" variants={fadeInUp}>
         {resources.map((resource) => (
           <Item
             description={resource.description}
@@ -18,8 +38,8 @@ export default function Resources() {
             title={resource.title}
           />
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -36,7 +56,7 @@ function Item({
 
   return (
     <a
-      className="-mx-2 flex cursor-ne-resize flex-row justify-between rounded-md px-2 py-2 transition-all duration-200 hover:bg-gray-500/10"
+      className="group -mx-2 flex cursor-ne-resize items-center gap-3 rounded px-2 py-2 transition-colors duration-150 hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current dark:hover:bg-white/5"
       href={link}
       rel="noopener noreferrer"
       target="_blank"
@@ -47,12 +67,12 @@ function Item({
           className="h-full w-full rounded-md bg-gray-500/20 object-contain px-0.5 py-0.5"
           src={faviconUrl}
         />
-      </div>{' '}
-      <div className="ml-2 flex grow flex-col">
-        <span className="text-secondary mr-2 grow truncate">
-          {title} ¬
+      </div>
+      <div className="flex min-w-0 grow flex-col">
+        <span className="text-secondary group-hover:text-primary truncate text-base transition-colors">
+          {title}
         </span>
-        <span className="text-tertiary shrink">{description}</span>
+        <span className="text-tertiary truncate text-sm">{description}</span>
       </div>
     </a>
   );

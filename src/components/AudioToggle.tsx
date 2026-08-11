@@ -22,7 +22,7 @@ export default function AudioToggle() {
       aria-label={on ? 'Turn sound off' : 'Turn sound on'}
       aria-pressed={on}
       className={cn(
-        'pointer-events-auto fixed right-4 bottom-4 z-40 sm:right-6 sm:bottom-6 md:right-8',
+        'pointer-events-auto fixed right-[var(--page-gutter)] bottom-[var(--page-gutter)] z-40',
         'flex h-10 w-10 items-center justify-center rounded-full',
         'border border-black/15 bg-white/70 backdrop-blur-sm dark:border-white/15 dark:bg-neutral-900/60',
         'text-tertiary hover:text-primary transition-colors',

@@ -36,6 +36,7 @@ const LOOP_DURATION = STEP_DURATION * SEQUENCE_STEPS;
 const LOCK_DURATION = Math.max(18000, LOOP_DURATION * 4.25);
 const SCHEDULER_INTERVAL = 25;
 const SCHEDULER_LOOKAHEAD = 100;
+const MAX_STEP_VOICES = 12;
 const LOCK_HOLD = 1800;
 const LOCK_PULSE_DURATION = 460;
 const LOCK_COLOR = '30,255,184';
@@ -46,6 +47,28 @@ const INTERACTIVE_SELECTOR =
 // Rows form a C-major piano roll. The bottom row starts at C2 and rises through
 // the scale, keeping random clicks harmonic while retaining melodic direction.
 const MAJOR_SCALE = [0, 2, 4, 5, 7, 9, 11];
+
+function selectStepVoices(notes: LockedNote[]) {
+  const newestByPitch = new Map<number, LockedNote>();
+  for (const note of notes) {
+    const existing = newestByPitch.get(note.detune);
+    if (!existing || note.createdAt > existing.createdAt) {
+      newestByPitch.set(note.detune, note);
+    }
+  }
+
+  const pitches = [...newestByPitch.values()].sort(
+    (first, second) => first.detune - second.detune,
+  );
+  if (pitches.length <= MAX_STEP_VOICES) return pitches;
+
+  return Array.from({ length: MAX_STEP_VOICES }, (_, index) => {
+    const pitchIndex = Math.round(
+      (index * (pitches.length - 1)) / (MAX_STEP_VOICES - 1),
+    );
+    return pitches[pitchIndex];
+  });
+}
 
 export default function CursorTrail() {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -261,6 +284,7 @@ export default function CursorTrail() {
           ((nextSequenceStep % SEQUENCE_STEPS) + SEQUENCE_STEPS) %
           SEQUENCE_STEPS;
         const delay = Math.max(0, (nextStepAt - now) / 1000);
+        const stepNotes: LockedNote[] = [];
 
         for (const lock of locks) {
           const age = nextStepAt - lock.createdAt;
@@ -271,12 +295,22 @@ export default function CursorTrail() {
           )
             continue;
 
-          const life = 1 - age / LOCK_DURATION;
           lock.lastPlayedAt = nextStepAt;
-          playGridNote(lock.detune, {
+          stepNotes.push(lock);
+        }
+
+        const voices = selectStepVoices(stepNotes);
+        const densityGain = Math.min(
+          1,
+          Math.sqrt(6 / Math.max(voices.length, 1)),
+        );
+        for (const voice of voices) {
+          const age = nextStepAt - voice.createdAt;
+          const life = 1 - age / LOCK_DURATION;
+          playGridNote(voice.detune, {
             delay,
-            gain: 0.48 + life * 0.42,
-            pan: panForX(lock.x),
+            gain: (0.48 + life * 0.42) * densityGain,
+            pan: panForX(voice.x),
           });
         }
 

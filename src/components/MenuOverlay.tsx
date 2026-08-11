@@ -12,17 +12,19 @@ import {
   MENU_SURFACE,
 } from '@/lib/motion';
 import { store, useStore } from '@/lib/store';
+import { Link, useRouterState } from '@tanstack/react-router';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Twitter, X } from 'lucide-react';
+import { Github, Linkedin, Mail, Music2, X } from 'lucide-react';
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 
 const pages = [
   { label: 'home', to: '/' },
-  { label: 'highlights', to: '/work' },
+  { label: 'highlights', to: '/highlights' },
+  { label: 'consulting', to: '/consulting' },
   { label: 'writing', to: '/writing' },
   { label: 'resources', to: '/resources' },
-];
+  { label: 'playground', to: '/playground' },
+] as const;
 
 const EMAIL = 'nasrul.huda.ds@gmail.com';
 
@@ -33,18 +35,20 @@ const socials = [
     icon: Linkedin,
     label: 'linkedin',
   },
-  { href: 'https://x.com/nnasrrull', icon: Twitter, label: 'x' },
+  { href: 'https://x.com/nnasrrull', icon: XLogo, label: 'x' },
   { href: `mailto:${EMAIL}`, icon: Mail, label: 'email' },
 ];
 
 export default function MenuOverlay() {
   const open = useStore((s) => s.menuOpen);
-  const location = useLocation();
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
 
   // Close on route change and on Escape.
   useEffect(() => {
     store.setMenu(false);
-  }, [location.pathname]);
+  }, [pathname]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) =>
@@ -123,7 +127,7 @@ export default function MenuOverlay() {
 
             <div className="relative flex flex-1 flex-col justify-center gap-1">
               {pages.map((p, i) => {
-                const active = isActive(location.pathname, p.to);
+                const active = isActive(pathname, p.to);
                 return (
                   <div className="overflow-hidden" key={p.to}>
                     <motion.div
@@ -141,13 +145,19 @@ export default function MenuOverlay() {
                         to={p.to}
                       >
                         <span
-                          className="font-bold tracking-[-0.04em] opacity-35 transition-opacity group-hover:opacity-100 data-[active]:opacity-100"
+                          className="inline-flex items-baseline gap-3 font-bold tracking-[-0.04em] opacity-35 transition-opacity group-hover:opacity-100 data-[active]:opacity-100"
                           data-active={active || undefined}
                           style={{
                             fontSize: 'clamp(2.25rem, 7vw, 4.5rem)',
                             lineHeight: 1.05,
                           }}
                         >
+                          {p.to === '/playground' && (
+                            <Music2
+                              aria-hidden="true"
+                              className="h-[0.8em] w-[0.8em] shrink-0"
+                            />
+                          )}
                           {p.label}
                         </span>
                         {active && (
@@ -191,4 +201,18 @@ export default function MenuOverlay() {
 
 function isActive(pathname: string, to: string) {
   return to === '/' ? pathname === '/' : pathname.startsWith(to);
+}
+
+function XLogo({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
 }

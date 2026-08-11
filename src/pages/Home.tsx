@@ -1,8 +1,10 @@
-import { allWritings } from 'content-collections';
 import { cn } from '@/lib/className';
 import DateViewer from '@components/DateView';
+import EmailLink from '@components/EmailLink';
 import ExternalLink from '@components/ExternalLink';
-import { Link } from 'react-router-dom';
+import InternalLink from '@components/InternalLink';
+import { Link } from '@tanstack/react-router';
+import { allWritings } from 'content-collections';
 import { motion } from 'framer-motion';
 
 type Post = {
@@ -43,13 +45,17 @@ const stagger = {
 
 const fadeInUp = {
   initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
 };
 
 export default function Home() {
   return (
     <motion.div
-      className="mx-auto flex max-w-xl flex-col gap-10 px-6"
+      className="page-gutter flex w-full max-w-xl flex-col gap-8"
       variants={stagger}
       initial="initial"
       animate="animate"
@@ -66,7 +72,9 @@ function Header() {
   return (
     <motion.div variants={fadeInUp} className="flex flex-col gap-0.5">
       <h1>Nasrul Huda</h1>
-      <p className="text-tertiary text-xs font-medium tracking-wide">AI Engineer</p>
+      <p className="text-tertiary text-xs font-medium tracking-wide">
+        AI Engineer
+      </p>
     </motion.div>
   );
 }
@@ -74,7 +82,9 @@ function Header() {
 function AboutMe() {
   return (
     <motion.div variants={fadeInUp} className="flex flex-col gap-3">
-      <p className="text-tertiary text-xs font-medium uppercase tracking-wider">About me</p>
+      <p className="text-tertiary text-xs font-medium tracking-wider uppercase">
+        About me
+      </p>
       <div className="text-secondary flex flex-col gap-3 text-base">
         <p>
           I enjoy building software that feels natural and dependable, where
@@ -84,17 +94,20 @@ function AboutMe() {
         </p>
         <p>
           I study Data Science and AI at the{' '}
-          <ExternalLink arrow={false} href="https://www.uni-hamburg.de">
+          <ExternalLink href="https://www.uni-hamburg.de">
             University of Hamburg
-          </ExternalLink> and keep learning by reading,
-          making, and exploring new ideas.
+          </ExternalLink>{' '}
+          and keep learning by reading, making, and exploring new ideas.
         </p>
         <p>
           Check out my{' '}
-          <Link className="underline decoration-black/30 dark:decoration-white/30 underline-offset-2 hover:decoration-black dark:hover:decoration-white transition-colors" to={'/work'}>
-            highlights and projects
-          </Link>{' '}
+          <InternalLink to="/highlights">highlights and projects</InternalLink>{' '}
           if you want to learn more about me.
+        </p>
+        <p>
+          I also take on{' '}
+          <InternalLink to="/consulting">consulting work</InternalLink>. If you
+          have an AI or data problem, book a call and let&rsquo;s talk.
         </p>
       </div>
     </motion.div>
@@ -116,49 +129,32 @@ function ContactLink({
   const titles = Array.isArray(title) ? title : title ? [title] : [];
 
   return (
-    <span className="block items-center group">
-      {website && <p className="text-tertiary text-[10px] font-medium uppercase tracking-wider mb-0.5">{website}</p>}
+    <div className="min-w-0">
+      {website && (
+        <p className="text-tertiary mb-0.5 text-[10px] font-medium tracking-wider uppercase">
+          {website}
+        </p>
+      )}
       <div className="flex flex-col gap-1">
         {hrefs.map((link, index) => (
-          <a
-            key={index}
-            className="text-secondary hover:text-primary flex items-center gap-1 text-base transition-colors duration-150"
-            href={link}
-            rel="noopener noreferrer"
-            target={link.endsWith("nasrul.info") ? "_blank" : "_self"}
-          >
-            <span>{titles[index] ?? link}</span>
-            <svg
-              className="h-2.5 w-2.5 opacity-40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </a>
+          <ExternalLink key={index} href={link}>
+            {titles[index] ?? link}
+          </ExternalLink>
         ))}
       </div>
       {email && (
-        <p className="text-secondary hover:text-primary text-base transition-colors duration-150">
-          {typeof title === 'string' ? title : title[0] ?? ''}
-        </p>
+        <EmailLink aria-label={`Email ${email}`} href={`mailto:${email}`}>
+          {typeof title === 'string' ? title : (title[0] ?? '')}
+        </EmailLink>
       )}
-    </span>
+    </div>
   );
 }
 
 function Contact() {
   return (
     <motion.div variants={fadeInUp} className="flex flex-col gap-3">
-      <p className="text-tertiary text-xs font-medium uppercase tracking-wider">Links</p>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-x-6 gap-y-4 min-[380px]:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] sm:grid-cols-[minmax(12rem,1.5fr)_minmax(6rem,1fr)_minmax(6rem,1fr)]">
         <ContactLink
           href="https://www.linkedin.com/in/nasrul-hudaa/"
           title="Nasrul Huda"
@@ -175,7 +171,7 @@ function Contact() {
           website="X"
         />
         <ContactLink
-          email="hi[at]nasrul[dot]info"
+          email="hi@nasrul.info"
           title="hi[at]nasrul[dot]info"
           website="Email"
         />
@@ -199,20 +195,23 @@ function RecentWritings() {
 
     return (
       <motion.div variants={fadeInUp} className="flex flex-col gap-3">
-        <p className="text-tertiary text-xs font-medium uppercase tracking-wider">Recent writing</p>
+        <p className="text-tertiary text-xs font-medium tracking-wider uppercase">
+          Recent writing
+        </p>
         <div className="space-y-0.5">
           {posts.map((post: Post) => (
             <Link
               className={cn(
-                '-mx-2 flex flex-row justify-between items-center px-2 py-1.5',
+                '-mx-2 flex flex-row items-center justify-between px-2 py-1.5',
                 'hover:bg-black/5 dark:hover:bg-white/5',
-                'transition-all duration-150 rounded',
+                'rounded transition-all duration-150',
                 'group',
               )}
-              to={`/writing/${post.slug}`}
+              params={{ slug: post.slug }}
+              to="/writing/$slug"
               key={post.slug}
             >
-              <span className="text-secondary mr-2 grow truncate text-base transition-colors group-hover:text-primary">
+              <span className="text-secondary group-hover:text-primary mr-2 grow truncate text-base transition-colors">
                 {post.title}
               </span>
               <span className="text-quaternary shrink-0 text-xs tabular-nums">

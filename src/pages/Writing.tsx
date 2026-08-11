@@ -1,7 +1,8 @@
-import { allWritings } from 'content-collections';
 import { cn } from '@/lib/className';
 import DateViewer from '@components/DateView';
-import { Link } from 'react-router-dom';
+import InternalLink from '@components/InternalLink';
+import { Link } from '@tanstack/react-router';
+import { allWritings } from 'content-collections';
 import { motion } from 'framer-motion';
 
 type Post = {
@@ -41,16 +42,20 @@ const stagger = {
 
 const fadeInUp = {
   initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
 };
 
 function EmptyState() {
   return (
-    <motion.div 
+    <motion.div
       variants={fadeInUp}
       className="text-tertiary flex flex-col items-center justify-center py-12 text-center"
     >
-      <div className="mb-3 h-10 w-10 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center">
+      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-black/5 dark:bg-white/5">
         <svg
           className="h-5 w-5 opacity-50"
           fill="none"
@@ -68,7 +73,8 @@ function EmptyState() {
       </div>
       <p className="text-secondary mb-1 text-base font-medium">No posts yet</p>
       <p className="text-tertiary max-w-xs text-xs">
-        Writing is coming soon. Check back later for thoughts, ideas, and updates.
+        Writing is coming soon. Check back later for thoughts, ideas, and
+        updates.
       </p>
     </motion.div>
   );
@@ -77,21 +83,18 @@ function EmptyState() {
 export default function Writing() {
   const { posts } = getData();
   return (
-    <motion.div 
-      className="mx-auto max-w-xl px-6 space-y-6"
+    <motion.div
+      className="page-gutter flex w-full max-w-xl flex-col gap-8"
       variants={stagger}
       initial="initial"
       animate="animate"
     >
-      <motion.div variants={fadeInUp} className="space-y-2">
+      <motion.div variants={fadeInUp} className="flex flex-col gap-2">
         <h1>Writing</h1>
         <p className="text-tertiary text-base">
-          If you&apos;re interested in exploring the articles that inspire me and
-          shape my thinking, check out{' '}
-          <Link className="underline decoration-black/30 dark:decoration-white/30 underline-offset-2 hover:decoration-black dark:hover:decoration-white transition-colors" to={'/resources'}>
-            Resources
-          </Link>
-          .
+          If you&apos;re interested in exploring the articles that inspire me
+          and shape my thinking, check out{' '}
+          <InternalLink to="/resources">Resources</InternalLink>.
         </p>
       </motion.div>
       {posts.length > 0 ? (
@@ -105,14 +108,15 @@ export default function Writing() {
             >
               <Link
                 className={cn(
-                  '-mx-2 flex flex-row justify-between items-center px-2 py-1.5',
+                  '-mx-2 flex flex-row items-center justify-between px-2 py-1.5',
                   'hover:bg-black/5 dark:hover:bg-white/5',
-                  'transition-all duration-150 rounded',
+                  'rounded transition-all duration-150',
                   'group',
                 )}
-                to={`/writing/${post.slug}`}
+                params={{ slug: post.slug }}
+                to="/writing/$slug"
               >
-                <span className="text-secondary mr-2 grow truncate text-base transition-colors group-hover:text-primary">
+                <span className="text-secondary group-hover:text-primary mr-2 grow truncate text-base transition-colors">
                   {post.title}
                 </span>
                 <span className="text-quaternary shrink-0 text-xs tabular-nums">

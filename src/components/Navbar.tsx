@@ -7,37 +7,47 @@ import { play } from '@/lib/audio';
 import { cn } from '@/lib/className';
 import { MENU_MORPH, MENU_SURFACE } from '@/lib/motion';
 import { store, useStore } from '@/lib/store';
-import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
+import { ArrowLeftIcon, MoonIcon, SunIcon } from '@heroicons/react/24/solid';
+import { Link, useRouterState } from '@tanstack/react-router';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
-import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   const { resolvedTheme, setTheme } = useTheme();
   const menuOpen = useStore((s) => s.menuOpen);
+  const pathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
+  const isPlayground = pathname === '/playground';
+  const isHighlightProject = pathname.startsWith('/highlights/');
 
   return (
     <motion.nav
       animate={{ opacity: 1, y: 0 }}
-      className="fixed top-[42px] right-[69px] left-4 z-[70] flex items-center justify-between sm:top-[54px] sm:right-[81px] sm:left-6 md:left-8 lg:left-12"
+      className={cn(
+        'fixed z-[70] flex items-center justify-end',
+        isPlayground
+          ? 'top-3.5 right-4 sm:right-6'
+          : 'top-[var(--page-gutter)] right-[var(--page-gutter)]',
+      )}
       initial={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* Logo mark → home */}
-      <Link
-        aria-label="Home"
-        className={cn(
-          'pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full',
-          '[font-family:var(--font-display)] text-xs font-bold lowercase',
-          'bg-neutral-950 text-neutral-50 dark:bg-neutral-50 dark:text-neutral-950',
-        )}
-        onMouseEnter={() => play('hover')}
-        to="/"
-      >
-        nh
-      </Link>
-
       <div className="flex items-center gap-2">
+        {isHighlightProject && (
+          <Link
+            aria-label="Back to highlights"
+            className={cn(
+              'pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full',
+              'text-tertiary border border-black/15 transition-colors dark:border-white/15',
+              'hover:text-primary',
+            )}
+            to="/highlights"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+          </Link>
+        )}
+
         <button
           aria-label="Toggle theme"
           className={cn(

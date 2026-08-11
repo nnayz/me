@@ -1,24 +1,46 @@
+import EmailLink from './EmailLink';
 import ExternalLink from './ExternalLink';
 import Flashcard from './Flashcard';
-import { Link } from 'react-router-dom';
+import InternalLink, { InternalAnchor, isSameSiteHref } from './InternalLink';
+import type { LinkProps } from '@tanstack/react-router';
+import type { ComponentPropsWithoutRef } from 'react';
 
-const CustomLink = (props: any) => {
-  const href = props.href;
-  const isInternalLink = href && href.startsWith('/');
+const CustomLink = ({
+  children,
+  href = '',
+  ...props
+}: ComponentPropsWithoutRef<'a'>) => {
+  const isRouterLink = href.startsWith('/');
 
-  if (isInternalLink) {
+  if (isRouterLink) {
     return (
-      <Link to={href} {...props}>
-        {props.children}
-      </Link>
+      <InternalLink to={href as LinkProps['to']} {...props}>
+        {children}
+      </InternalLink>
     );
   }
 
-  if (href.startsWith('#')) {
-    return <a {...props} />;
+  if (href.startsWith('mailto:')) {
+    return (
+      <EmailLink href={href as `mailto:${string}`} {...props}>
+        {children}
+      </EmailLink>
+    );
   }
 
-  return <ExternalLink href={href} {...props} />;
+  if (isSameSiteHref(href)) {
+    return (
+      <InternalAnchor href={href} {...props}>
+        {children}
+      </InternalAnchor>
+    );
+  }
+
+  return (
+    <ExternalLink href={href} {...props}>
+      {children}
+    </ExternalLink>
+  );
 };
 
 function RoundedImage(props: any) {

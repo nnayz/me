@@ -31,7 +31,7 @@ export const actions: Action[] = [
   {
     name: "Highlights",
     keywords: "highlights",
-    href: "/work",
+    href: "/highlights",
     section: "Navigation",
     color: "#FF7F50",
     iconColor: "#673D13",
@@ -92,7 +92,7 @@ export const Navigation: Action[] = [
   {
     name: "Highlights",
     keywords: "highlights",
-    href: "/work",
+    href: "/highlights",
     section: "Navigation",
   },
 ];

@@ -1,11 +1,8 @@
-/**
- * The stage. A near-black (or near-white) surface with a faint grid that
- * fades toward the edges — it suggests space without decorating it.
- */
-export default function Background() {
+/** The shared near-black (or near-white) page surface. */
+export default function Background({ showGrid = false }: { showGrid?: boolean }) {
   return (
     <div className="fixed inset-0 z-0 bg-stone-50 dark:bg-neutral-950">
-      <div aria-hidden className="stage-grid" />
+      {showGrid && <div aria-hidden className="stage-grid" />}
     </div>
   );
 }
